@@ -299,7 +299,6 @@ public class StoreXMLDataAction implements Action {
             typePropInstances.get(subjectType).put(attr.getValue(), subject);
         }
 
-        // TODO: possible that no children
         for (Element child : element.getChildren()) {
             // a possible data/object property
             if (child.getChildren().isEmpty()) {
@@ -313,7 +312,6 @@ public class StoreXMLDataAction implements Action {
                     if (!typePropInstances.containsKey(subjectType))
                         typePropInstances.put(subjectType, new HashMap<String, Resource>());
                     typePropInstances.get(subjectType).put(child.getTextTrim(), subject);
-                    continue;
                 }
                 if (opRel != null) {
                     TraversalDescription cover = Traversal.description().breadthFirst().relationships(ClusterSpace.PublicRelTypes.EQUIVALENT_CLASS).relationships(ClusterSpace.PublicRelTypes.IS_A, Direction.INCOMING);
@@ -328,14 +326,17 @@ public class StoreXMLDataAction implements Action {
                     }
                     //logger.warn("opRel " + n.getProperty("IRI") + " " + child.getName() + " match " + opRel.getProperty("IRI"));
                     needResolution.add(new MyTriple(subject, model.createProperty((String)opRel.getProperty("IRI")), resolvers));
-                    continue;
                 }
+
+                // if the child is empty, and it isn't a relationship
+                // then it is a useless tag even if it is a concept
+                // otherwise the above conditionals have handled this child
+                continue;
             }
 
             Relationship opRel = opMatcher.match(child.getName());
             if (opRel != null) {
                 for (Element subChild : child.getChildren()) {
-                    //logger.warn("Subchild " + subChild.getName());
                     Resolver val = toRDF(subChild);
                     if (val == null)
                         continue;
@@ -346,22 +347,33 @@ public class StoreXMLDataAction implements Action {
                         needResolution.add(new MyTriple(subject, model.createProperty((String)opRel.getProperty("IRI")), val));
                 }
 
-                // TODO do we return here?
+                // FIXME
+                // it is possible that a relationship's subchildren are
+                // a direct representation of an instance, without being
+                // wrapped in concept tags. This case is currently not handled
+                // example:
+                // <hasFriend><name>Nikhil</name></hasFriend>
+                // rather than
+                // <hasFriend><Friend><name>Nikhil</name></Friend></hasFriend>
+                //
+                // the approach would be to find the cover of the opRel's
+                // range, and see for each of them, their data/object
+                // properties and compare them against the sub tags and go for
+                // a statistical match
+                continue;
             }
             
-            // otherwise this could be an concept, in which case
-            // we'll try to infer the relationship based on range
-            IndexHits<Node> ranges = conceptIndex.query("CONCEPT", new QueryContext("*" + child.getName()).sortByScore());
-            final Node cn = ranges.hasNext() ? ranges.next() : null;
+            // otherwise this could be an concept, in which case we'll try to
+            // infer the relationship based on range
+            IndexHits<Node> ranges = conceptIndex.query("CONCEPT", new
+                    QueryContext("*" + child.getName()).sortByScore()); final
+                Node cn = ranges.hasNext() ? ranges.next() : null;
 
             if (cn != null) {
-                logger.warn(element.getName() + " -> Concept " + child.getName() + " " + cn.getProperty("IRI"));
-
                 // try to find a compatible relationship
                 Expander expander = StandardExpander.DEFAULT.add(ClusterSpace.PublicRelTypes.OBJECT_RELATIONSHIP, Direction.OUTGOING);
 
                 PathFinder<Path> pf = GraphAlgoFactory.allSimplePaths(expander, 1);
-                // TODO modify to find all paths and use some score again
                 TraversalDescription trav = Traversal.description()
                     .breadthFirst()
                     .uniqueness(Uniqueness.RELATIONSHIP_GLOBAL)
@@ -373,7 +385,7 @@ public class StoreXMLDataAction implements Action {
                     for (Node destClazz : trav.traverse(cn).nodes()) {
                         Path path = pf.findSinglePath(srcClazz, destClazz);
                         if (path != null) {
-                            // we probably want to do scoring, but for now
+                            // FIXME we probably want to do scoring, but for now
                             // choose the first one
                             rel = (String) path.lastRelationship().getProperty("IRI");
                             break;
@@ -387,6 +399,8 @@ public class StoreXMLDataAction implements Action {
                     needResolution.add(new MyTriple(subject, model.createProperty(rel), object));
             }
 
+            // it is possible that
+            // the concept
             // child has subtags
             // they can either define a complete new instance
             // whose type we can infer from the subtag name
