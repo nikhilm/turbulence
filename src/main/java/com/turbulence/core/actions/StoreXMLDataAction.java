@@ -7,9 +7,16 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.collections.IteratorUtils;
 
@@ -57,8 +64,10 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 
 import com.hp.hpl.jena.util.iterator.Filter;
 
@@ -166,6 +175,66 @@ class ObjectPropertyMatcher {
     }
 }
 
+interface Resolver {
+    public Resource resolve();
+}
+
+class LookupResolver implements Resolver {
+    String typeIRI;
+    String key;
+    Map<String, Map<String, Resource>> lookup;
+    LookupResolver(String typeIRI, String key, Map<String, Map<String, Resource>> lookup) {
+        this.typeIRI = typeIRI;
+        this.key = key;
+        this.lookup = lookup;
+    }
+
+    public Resource resolve() {
+        if (lookup.containsKey(typeIRI) && lookup.get(typeIRI).containsKey(key))
+            return lookup.get(typeIRI).get(key);
+        return null;
+    }
+}
+
+class ConcreteResolver implements Resolver {
+    Resource resource;
+    ConcreteResolver(Resource r) {
+        this.resource = r;
+    }
+
+    public Resource resolve() {
+        return resource;
+    }
+}
+
+class MyTriple {
+    private Resource subject;
+    private Property predicate;
+    private List<Resolver> possibleObjects;
+
+    public MyTriple(Resource subject, Property predicate, List<Resolver> object) {
+        this.subject = subject;
+        this.predicate = predicate;
+        this.possibleObjects = object;
+    }
+
+    public MyTriple(Resource subject, Property predicate, Resolver object) {
+        this.subject = subject;
+        this.predicate = predicate;
+        this.possibleObjects = Arrays.asList(object);
+    }
+
+    public Statement resolve(Model m) {
+        for (Resolver r : possibleObjects) {
+            Resource object = r.resolve();
+            if (object != null) {
+                return m.createStatement(subject, predicate, object);
+            }
+        }
+        return null;
+    }
+}
+
 public class StoreXMLDataAction implements Action {
     private static final Log logger =
         LogFactory.getLog(StoreXMLDataAction.class);
@@ -173,7 +242,8 @@ public class StoreXMLDataAction implements Action {
 
     private InputStream input;
     private Index<Node> conceptIndex;
-    private Set<Triple> triples;
+    private Map<String, Map<String, Resource>> typePropInstances;
+    private List<MyTriple> needResolution;
     private Model model;
 
     protected StoreXMLDataAction(InputStream in) {
@@ -184,7 +254,7 @@ public class StoreXMLDataAction implements Action {
         return false;
     }
 
-    private RDFNode toRDF(Element element) {
+    private Resolver toRDF(Element element) {
         // try to find concept
         IndexHits<Node> hits = conceptIndex.query("CONCEPT", new QueryContext("*" + element.getName()).sortByScore());
 
@@ -204,6 +274,15 @@ public class StoreXMLDataAction implements Action {
 
         Resource subject = model.createResource();
 
+        // reference to something defined elsewhere
+        if (element.getChildren().isEmpty() && element.getAttributes().isEmpty()) {
+            String text = element.getTextTrim();
+            if (!text.isEmpty()) {
+                return new LookupResolver((String)n.getProperty("IRI"), text, typePropInstances);
+            }
+            return null; // return null because this is a useless tag if it doesn't have anything
+        }
+
         // rdf:type
         model.add(model.createStatement(subject, RDF.type, model.createResource((String)n.getProperty("IRI"))));
 
@@ -214,6 +293,10 @@ public class StoreXMLDataAction implements Action {
             if (rel == null)
                 continue;
             model.add(model.createLiteralStatement(subject, model.createProperty((String)rel.getProperty("IRI")), attr.getValue()));
+            String subjectType = (String) n.getProperty("IRI");
+            if (!typePropInstances.containsKey(subjectType))
+                typePropInstances.put(subjectType, new HashMap<String, Resource>());
+            typePropInstances.get(subjectType).put(attr.getValue(), subject);
         }
 
         // TODO: possible that no children
@@ -226,31 +309,44 @@ public class StoreXMLDataAction implements Action {
 
                 if (dpRel != null) {
                     model.add(model.createLiteralStatement(subject, model.createProperty((String)dpRel.getProperty("IRI")), child.getText()));
+                    String subjectType = (String) n.getProperty("IRI");
+                    if (!typePropInstances.containsKey(subjectType))
+                        typePropInstances.put(subjectType, new HashMap<String, Resource>());
+                    typePropInstances.get(subjectType).put(child.getTextTrim(), subject);
+                    continue;
                 }
-                if (opRel != null) // TODO
-                    logger.warn("opRel " + n.getProperty("IRI") + " " + child.getName() + " match " + opRel.getProperty("IRI"));
-
-                continue;
+                if (opRel != null) {
+                    TraversalDescription cover = Traversal.description().breadthFirst().relationships(ClusterSpace.PublicRelTypes.EQUIVALENT_CLASS).relationships(ClusterSpace.PublicRelTypes.IS_A, Direction.INCOMING);
+                    Set<Node> ranges = IteratorCollection.iteratorToSet(cover.traverse(opRel.getEndNode()).nodes().iterator());
+                    List<Resolver> resolvers = new LinkedList<Resolver>();
+                    for (Node r : ranges) {
+                        // because the property could be any of the subclass
+                        // types as well, we need to add a resolver for each
+                        // pick the one that succeeds
+                        Resolver res = new LookupResolver((String)r.getProperty("IRI"), child.getTextTrim(), typePropInstances);
+                        resolvers.add(res);
+                    }
+                    //logger.warn("opRel " + n.getProperty("IRI") + " " + child.getName() + " match " + opRel.getProperty("IRI"));
+                    needResolution.add(new MyTriple(subject, model.createProperty((String)opRel.getProperty("IRI")), resolvers));
+                    continue;
+                }
             }
 
             Relationship opRel = opMatcher.match(child.getName());
             if (opRel != null) {
                 for (Element subChild : child.getChildren()) {
-                    logger.warn("Subchild " + subChild.getName());
-                    RDFNode val = toRDF(subChild);
+                    //logger.warn("Subchild " + subChild.getName());
+                    Resolver val = toRDF(subChild);
                     if (val == null)
                         continue;
 
-                    try {
-                        Resource o = (Resource) val;
-                        model.add(model.createStatement(subject, model.createProperty((String)opRel.getProperty("IRI")), o));
-                    } catch (ClassCastException e) {
-                        // if opRel has value as literal then again we need to
-                        // co-relate later
-                        // TODO
-                        model.add(model.createLiteralStatement(subject, model.createProperty((String)opRel.getProperty("IRI")), (Literal) val));
-                    }
+                    if (val instanceof ConcreteResolver)
+                        model.add(model.createStatement(subject, model.createProperty((String)opRel.getProperty("IRI")), val.resolve()));
+                    else
+                        needResolution.add(new MyTriple(subject, model.createProperty((String)opRel.getProperty("IRI")), val));
                 }
+
+                // TODO do we return here?
             }
             
             // otherwise this could be an concept, in which case
@@ -272,15 +368,23 @@ public class StoreXMLDataAction implements Action {
                     .relationships(ClusterSpace.PublicRelTypes.EQUIVALENT_CLASS)
                     .relationships(ClusterSpace.PublicRelTypes.IS_A, Direction.OUTGOING);
 
+                String rel = null;
                 for (Node srcClazz : trav.traverse(n).nodes()) {
                     for (Node destClazz : trav.traverse(cn).nodes()) {
                         Path path = pf.findSinglePath(srcClazz, destClazz);
-                        logger.warn(srcClazz.getProperty("IRI") + " ---> " + destClazz.getProperty("IRI") + " ? " + path);
                         if (path != null) {
-                            logger.warn("Checking " + srcClazz.getProperty("IRI") + " " + path.lastRelationship().getProperty("IRI") + " " + destClazz.getProperty("IRI"));
+                            // we probably want to do scoring, but for now
+                            // choose the first one
+                            rel = (String) path.lastRelationship().getProperty("IRI");
+                            break;
                         }
                     }
                 }
+
+                // Get the 'resource' that this tag is
+                Resolver object = toRDF(child);
+                if (rel != null && object != null)
+                    needResolution.add(new MyTriple(subject, model.createProperty(rel), object));
             }
 
             // child has subtags
@@ -289,19 +393,19 @@ public class StoreXMLDataAction implements Action {
             // or we will have to infer based on tag collection
         }
 
-        // if we have text nodes, this could be another thing requiring
-        // co-relation
-        // or something which only defines one 'primary' property
-        // TODO
+        return new ConcreteResolver(subject);
+    }
 
-        return subject;
+    private void addTriple(MyTriple trip) {
+        needResolution.add(trip);
     }
 
     public Result perform() {
         Result r = new Result();
 
         conceptIndex = TurbulenceDriver.getClusterSpace().index().forNodes("conceptIndex");
-        triples = new HashSet<Triple>();
+        needResolution = new LinkedList<MyTriple>();
+        typePropInstances = new HashMap<String, Map<String, Resource>>();
         model = ModelFactory.createDefaultModel();
 
         try {
@@ -309,6 +413,19 @@ public class StoreXMLDataAction implements Action {
             Document document = b.build(input);
             for (Element el : document.getRootElement().getChildren()) {
                 toRDF(el);
+            }
+
+            for (Map.Entry<String, Map<String, Resource>> entry : typePropInstances.entrySet()) {
+                logger.warn(entry.getKey());
+                for (Map.Entry<String, Resource> subEntry : entry.getValue().entrySet()) {
+                    logger.warn("    " + subEntry.getKey() + ": " + subEntry.getValue());
+                }
+            }
+
+            for (MyTriple t : needResolution) {
+                Statement s = t.resolve(model);
+                if (s != null)
+                    model.add(s);
             }
             r.success = true;
         } catch (JDOMException e) {
