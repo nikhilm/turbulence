@@ -202,9 +202,16 @@ public class RegisterSchemaAction implements Action {
 
             tx = cs.beginTx();
             try {
-                for (OWLDataRange range : ax.getProperty().getRanges(ont)) {
-                    createDataProperty(iri, ax.getProperty().asOWLDataProperty(), ax.getDomain().asOWLClass(), range);
+                Set<OWLDataRange> ranges = ax.getProperty().getRanges(ont);
+                if (ranges.isEmpty()) {
+                    createDataProperty(iri, ax.getProperty().asOWLDataProperty(), ax.getDomain().asOWLClass(), ont.getOWLOntologyManager().getOWLDataFactory().getOWLDatatype(IRI.create("http://www.w3.org/2001/XMLSchema#string")));
                     dealt.add(ax.getProperty().asOWLDataProperty().getIRI().toString());
+                }
+                else {
+                    for (OWLDataRange range : ranges) {
+                        createDataProperty(iri, ax.getProperty().asOWLDataProperty(), ax.getDomain().asOWLClass(), range);
+                        dealt.add(ax.getProperty().asOWLDataProperty().getIRI().toString());
+                    }
                 }
                 tx.success();
             } catch (Exception e) {
