@@ -37,14 +37,7 @@
 % paper title
 \title{A Database for Semantic Data Mining}
 %
-%
 % author names and IEEE memberships
-% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
-% a structure at a ~ so this keeps an author's name from being broken across
-% two lines.
-% use \thanks{} to gain access to the first footnote area
-% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
-% was not built to handle multiple paragraphs
 \author{\IEEEauthorblockN{Nikhil Marathe}
 \IEEEauthorblockA{
     Dhirubhai Ambani Institute of Information and Communication Technology\\
@@ -54,50 +47,49 @@
 \emph{Supervisor}\\\emph{Dr. Sourish Dasgupta}
 }% <-this % stops a space
 %
-% The paper headers
-% The only time the second header will appear is for the odd numbered pages
-% after the title page when using the twoside option.
-
-
-% If you want to put a publisher's ID mark on the page
-% (can leave text blank if you just want to see how the
-% text height on the first page will be reduced by IEEE)
-%\pubid{0000--0000/00\$00.00~\copyright~2002 IEEE}
-
-% use only for invited papers
-%\specialpapernotice{(Invited Paper)}
 
 % make the title area
 \maketitle
 
-
 \begin{abstract}
-    We propose a system for conversion, storage and querying of semi-structured XML data from heterogenous services into structured, semantic data.
+    We propose a system for conversion, storage and querying of semi-structured
+    XML data from heterogenous services into structured, semantic data.
 \end{abstract}
 
 \begin{IEEEkeywords}
-    Distributed databases, Query processing, Schema and sub-schema, Data mining, Knowledge management applications, Web mining, RDF, Semantic web.
+    Distributed databases, Query processing, Schema and sub-schema, Data
+    mining, Knowledge management applications, Web mining, RDF, Semantic web.
 \end{IEEEkeywords}
 
 \section{Introduction}
 \IEEEPARstart{T}{he} semantic web has made significant strides in the recent
-past. The Linked Data initiative TODO:ref has made a huge set of data available
-online, usually in very structured RDF form. Still there remains a significant
-portion of data that is unstructured or semi-structured but contains valuable
-information. This information is not available in a semantically aware form due
-to various reasons - the data could have been produced by legacy software,
-perhaps producing RDF data is resource intensive or not supported by the
-creator TODO needs better reasons. This paper presents an approach to
-extracting structured, semantic data from semi-structured XML \emph{from
-diverse sources}, aggregating the information spread over different ontologies
-and offering a SPARQL interface to access this data. A potential use case is in
-scientific research, where various sensors can continuously send input to the
-system and the system can present a unified interface for inferences to be
-resolved from the data. Our system is designed to act in a cluster so that it
-can store massive amounts of data.
+past. The Linked Data initiative aims to make graph structured data encoded in
+RDF and available over HTTP. Still there remains a significant portion of data
+that is unstructured or semi-structured but contains valuable information. An
+example of this is microformats\cite{Khare:06} embedded in web pages or the
+various formats used by social networks to publish various messages about the
+activity of their members. This information is not available in a semantically
+aware form due to various reasons. For example, the micro-blogging website
+Twitter produces
+340 million tweets
+a day\footnote{http://blog.twitter.com/2012/03/twitter-turns-six.html}.
+This data is available in custom XML format. Similarly various scientific
+sensors around the world constantly produce data. The rate of data
+production on the Internet is sky-rocketing, and storage and analysis of
+this data has become a new computing problem under the moniker of Big Data.
+This paper makes the following contributions:
+
+\begin{itemize}
+    \item Provides an attempt at translating XML data to structured RDF data.
+    \item Presents a conversion of ontology data to a cached 'Clusterspace' to
+        allow fast, distributed reads.
+    \item Storage of RDF data over a distributed key-value store in a manner
+        suitable for data-mining.
+\end{itemize}
 
 \section{Background}
 \label{sec:background}
+
 
 TODO: diff between XML and RDF
 
@@ -106,12 +98,16 @@ Our system has the following core modules:
 
 \begin{itemize}
     \item \emph{Clusterspace} - A graph of the various concepts spanning all
-        known ontologies implemented over Neo4j TODO: ref.
+        known ontologies implemented over Neo4j\footnote{http://neo4j.org}.
     \item \emph{Triple store} - An RDF triple store implemented over Apache
-        Cassandra TODO: ref.
+        Cassandra\footnote{http://cassandra.apache.org}.
     \item \emph{XML to RDF converter} - Attempts to generate a set of RDF
         triples from semantic information extracted from XML data.
 \end{itemize}
+
+In addition, OWL API\cite{Hor:09} has been used for ontology processing,
+Pellet\cite{Parsia04pellet:an} as the reasoner and Apache
+Jena\footnote{http://incubator.apache.org/jena/} to process RDF and SPARQL.
 
 TODO: insert diagram of system
 
@@ -160,7 +156,25 @@ The advantages and limitations of building up a Clusterspace are:
     \item Datatype information for the range is lost on Datatype Properties.
 \end{itemize}
 
+Once the Clusterspace has been extended with some ontology, queries over that
+ontology can be augmented with entailment. For example, the query:
+
+\begin{verbatim}
+PREFIX db: <http://dbpedia.org/ontology/>
+SELECT ?p WHERE { ?b a db:Book. ?p a db:Person. ?b db:author ?p }]
+\end{verbatim}
+
+over \ref{fig:person-cs-example}, will return books written by actors as well
+as politicians. Since a Book is a Work, property ``author'' has domain as Work
+and range as Person, and Actor and Politician are subclasses of Person.
+
+\begin{figure}
+    \caption{Sample Clusterspace - DBpedia Work and Person}
+    \label{fig:person-cs-example}
+\end{figure}
+
 \subsection{XML to RDF conversion}
+
 The current implementation of the XML to RDF conversion takes a very naive
 approach to extracting information from the XML data. It can be immensely
 augmented by using statistical properties and methods from Information
@@ -184,7 +198,8 @@ accepts plain XML, it has some preconditions for it to work:
 
 \begin{itemize}
     \item The tag names should be class or property names from a known ontology.
-    \item Attribute names should be a datatype property name from an known ontology.
+    \item Attribute names should be a datatype property name from an known
+        ontology.
     \item The top level tags should be class names.
     \item The conversion considers only one level of nesting in associating
         data. For example, in document~\ref{ex:xml-bad} it won't infer that the
@@ -254,6 +269,14 @@ this instance. A child tag can be:
 
 \subsection{Storing RDF in Cassandra}
 
+Apache Cassandra\footnote{http://cassandra.apache.org} is a distributed,
+column-oriented, eventually-consistent database, based on the Google
+Bigtable\cite{Chang06bigtable:a} and Amazon
+Dynamo\cite{Hastorun07dynamo:amazon's} systems. It provides a non-relational
+key-value database with replication and partitioning across a cluster. Using
+the concept of super-columns, Cassandra also allows a two-level hash table,
+${ key1 : { key2 : value } }$.
+
 TODO: What is Cassandra and Why Cassandra?
 
 The Cassandra data model allows nested storage using super columns. We use the
@@ -277,10 +300,47 @@ our system.
 
 \end{enumerate}
 
+TODO: graphic of columnfamilies
+
 \begin{figure}
     \caption{Clusterspace formation}
     \label{cs-algo}
-    TODO this figure
+    \begin{algorithmic}
+        \Function{Add-To-Clusterspace}{ontology}
+            \Require $ontology$ is the ontology to be added
+            \If{$ontology$ is already in the clusterspace}
+                \State \Return
+            \EndIf
+
+            \ForAll{ontologies imported by $ontology$}
+                \State \Call{Add-To-Clusterspace}{$ontology$}
+            \EndFor
+
+            \ForAll{classes declared in $ontology$}
+                \State \Call{Link-Class}{$class$}
+            \EndFor
+
+            \ForAll{object properties defined in $ontology$}
+                \State \Call{Link-Object-Property}{$property$}
+                \If{$property$ has no domain}
+                    \ForAll{$(root, range)$ over $(roots, range of property)$}
+                        \State \Call{Add-Edge}{$root$,$range$}
+                    \EndFor
+                \EndIf
+                \ForAll{pairs $(domain,range)$ over which $property$ is defined}
+                    \State \Call{Add-Edge}{$domain,range,property$}
+                \EndFor
+            \EndFor
+
+            \ForAll{data properties defined in $ontology$}
+                \If{$property$ has no domain}
+                    \State \Call{Add-Edge}{$root$,xsd:string} for all roots
+                \Else
+                    \State \Call{Add-Edge}{$domain$,xsd:string} for all domains
+                \EndIf
+            \EndFor
+        \EndFunction
+    \end{algorithmic}
 \end{figure}
 
 \begin{figure}
@@ -458,17 +518,77 @@ our system.
     \end{algorithmic}
 \end{figure*}
 
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
+\section{Evaluation}
 
-% needed in second column of first page if using \pubid
-%\pubidadjcol
+We performed performance evaluations for our system in four parts.
+
+For all tests, the hardware was a 2011 Macbook Pro with Snow Leopard 10.6.8,
+2.3GHz Intel Core i7, 8GB RAM, and a 7200rpm Hard Drive.
+JVM 1.6.0 was used. The start heap size for the system was 1G, for Cassandra it
+was 400M. Max heap size for the system was 2G, for Cassandra it was 4G.
+
+\subsection{Loading an ontology in the clusterspace}
+
+The DBpedia ontology v3.6 has 272 classes, 629 object properties and 706
+datatype properties. One of the key measures is the time taken to build the
+class heirarchy. Therefore we ran runs with modified DBpedia ontologies to have
+10 to 272 classes. Each test was run 10 times and then averaged. The number of
+properties was kept at maximum and the time required to build the property
+heirarchy is not measured as it is the same algorithm as for the class
+heirarchy. Figure \ref{fig:eval:cs-form} show the test results. Adding edges
+between properties is an almost constant time operation for every
+$(domain,range)$ pair as the known classes are stored in a hash. If the
+domain is anonymous, all the roots get an edge. This is responsible for the
+sudden decrease in over all running time on the DBpedia ontology for 272
+classes. As the number of roots increase (see table \ref{tbl:cs-form-time}),
+the extra cost of adding properties to each of them causes a corresponding
+increase in times. But when all classes have been loaded, each
+$(domain,range)$ pair is constant time accessible, leading to a drop in
+times.
+
+\begin{table}
+    \caption{Clusterspace formation test cases}
+    \label{tbl:cs-form-time}
+    \begin{center}
+        \begin{tabular}{ r r }
+            \hline
+            Classes & Roots\\
+            10 & 5\\
+            50 & 12\\
+            100 & 17\\
+            180 & 24\\
+            272 & 21\\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\begin{figure*}
+    \centering
+    \includegraphics[scale=0.5]{../../graphs/full-register/register}
+    \caption{Clusterspace formation time with DBpedia ontology}
+    \label{fig:eval:cs-form}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[scale=0.5]{../../graphs/full-query/qm}
+    \caption{Query retrieval Clusterspace traversal time}
+    \label{fig:eval:qcs}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[scale=0.5]{../../graphs/full-query/qr}
+    \caption{Query retrieval total time}
+    \label{fig:eval:qtotal}
+\end{figure*}
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
 % adjust value as needed - may need to be readjusted if
 % the document is modified later
-%\IEEEtriggeratref{8}
+\IEEEtriggeratref{8}
 % The "triggered" command can be changed if desired:
 %\IEEEtriggercmd{\enlargethispage{-5in}}
 
@@ -477,7 +597,5 @@ our system.
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,200801011}
 
-% biography section
-% 
 \end{document}
 
