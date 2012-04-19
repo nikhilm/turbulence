@@ -1,0 +1,483 @@
+%% Based on <bare_jrnl.tex> in the ieee package available from CTAN,
+%% I have changed the options so that most useful ones are clubbed together,
+%% Have a look at <bare_jrnl.tex> to understand the function of each package. 
+
+%% This code is offered as-is - no warranty - user assumes all risk.
+%% Free to use, distribute and modify.
+
+% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
+% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
+% *** with production work. IEEE's font choices can trigger bugs that do  ***
+% *** not appear when using other class files.                            ***
+% Testflow can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/supported/IEEEtran/testflow
+
+%        File: 200801011.tex
+%     Created: Mon Apr 16 03:00 PM 2012 I
+% Last Change: Mon Apr 16 03:00 PM 2012 I
+%
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite, graphicx, subfigure, amsmath, algpseudocode, float} 
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\interdisplaylinepenalty=2500
+
+% *** Do not adjust lengths that control margins, column widths, etc. ***
+% *** Do not use packages that alter fonts (such as pslatex).         ***
+% There should be no need to do such things with IEEEtran.cls V1.6 and later.
+
+
+% correct bad hyphenation here
+\hyphenation{}
+
+
+\begin{document}
+%
+% paper title
+\title{A Database for Semantic Data Mining}
+%
+%
+% author names and IEEE memberships
+% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
+% a structure at a ~ so this keeps an author's name from being broken across
+% two lines.
+% use \thanks{} to gain access to the first footnote area
+% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
+% was not built to handle multiple paragraphs
+\author{\IEEEauthorblockN{Nikhil Marathe}
+\IEEEauthorblockA{
+    Dhirubhai Ambani Institute of Information and Communication Technology\\
+    Gandhinagar, Gujarat - 382007\\
+    \texttt{200801011@daiict.ac.in}
+}
+\emph{Supervisor}\\\emph{Dr. Sourish Dasgupta}
+}% <-this % stops a space
+%
+% The paper headers
+% The only time the second header will appear is for the odd numbered pages
+% after the title page when using the twoside option.
+
+
+% If you want to put a publisher's ID mark on the page
+% (can leave text blank if you just want to see how the
+% text height on the first page will be reduced by IEEE)
+%\pubid{0000--0000/00\$00.00~\copyright~2002 IEEE}
+
+% use only for invited papers
+%\specialpapernotice{(Invited Paper)}
+
+% make the title area
+\maketitle
+
+
+\begin{abstract}
+    We propose a system for conversion, storage and querying of semi-structured XML data from heterogenous services into structured, semantic data.
+\end{abstract}
+
+\begin{IEEEkeywords}
+    Distributed databases, Query processing, Schema and sub-schema, Data mining, Knowledge management applications, Web mining, RDF, Semantic web.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\IEEEPARstart{T}{he} semantic web has made significant strides in the recent
+past. The Linked Data initiative TODO:ref has made a huge set of data available
+online, usually in very structured RDF form. Still there remains a significant
+portion of data that is unstructured or semi-structured but contains valuable
+information. This information is not available in a semantically aware form due
+to various reasons - the data could have been produced by legacy software,
+perhaps producing RDF data is resource intensive or not supported by the
+creator TODO needs better reasons. This paper presents an approach to
+extracting structured, semantic data from semi-structured XML \emph{from
+diverse sources}, aggregating the information spread over different ontologies
+and offering a SPARQL interface to access this data. A potential use case is in
+scientific research, where various sensors can continuously send input to the
+system and the system can present a unified interface for inferences to be
+resolved from the data. Our system is designed to act in a cluster so that it
+can store massive amounts of data.
+
+\section{Background}
+\label{sec:background}
+
+TODO: diff between XML and RDF
+
+\section{System}
+Our system has the following core modules:
+
+\begin{itemize}
+    \item \emph{Clusterspace} - A graph of the various concepts spanning all
+        known ontologies implemented over Neo4j TODO: ref.
+    \item \emph{Triple store} - An RDF triple store implemented over Apache
+        Cassandra TODO: ref.
+    \item \emph{XML to RDF converter} - Attempts to generate a set of RDF
+        triples from semantic information extracted from XML data.
+\end{itemize}
+
+TODO: insert diagram of system
+
+\emph{Publishers} feed data to the system via XML or RDF. The Clusterspace is
+built up as and when new ontologies are introduced to the system. Information
+from the Clusterspace and the input data is used to store triples.
+\emph{Subscribers} may then query the system to obtain RDF output of all known
+data in the database via the SPARQL interface.
+
+\subsection{Clusterspace}
+The Clusterspace is a graph representation of a subset of the axioms stated by
+all known ontologies. The Clusterspace is built up by using a \emph{reasoner}
+TODO:which? the first time an ontology is introduced to the system. 
+
+The Clusterspace stores two distinct directed trees. One is the Class heirarchy
+and the other is the Property heirarchy. As new ontologies are introduced, the
+reasoner is used to find the appropriate position to insert the class
+(\texttt{rdf:Class}) in the Class heirarchy. The Class heirarchy has as its
+roots the classes that have no super-classes. We choose not to deal with
+\texttt{owl:Thing} as the single root unless an ontology explicitly introduces
+it. The Property heirarchy is similar but uses the \texttt{rdf:subPropertyOf}
+relationship to infer the heirarchy.
+
+The class heirarchy also encodes object properties. An edge is created from the
+domain of the property to the range(s). For datatype properties, all ranges are
+co-erced to the string representation, with only
+\texttt{string}\footnote{http://www.w3.org/2001/XMLSchema\#string} existing in
+the Clusterspace.
+
+The full algorithm for forming the clusterspace can be found in \ref{cs-algo}.
+The advantages and limitations of building up a Clusterspace are:
+
+\subsubsection*{Advantages}
+\begin{itemize}
+    \item Fast lookup of known classes using exact or approximate matches.
+    \item Reasoning only has to be performed once, after that only simple graph
+        traversal is required.
+    \item Clusterspace can be shared and updated across a distributed system.
+\end{itemize}
+
+\subsubsection*{Limitations}
+\begin{itemize}
+    \item The Clusterspace does not encode full reasoning information.
+    \item Complete RDFS entailment support is not currently implemented. (For
+        example, relationship transitivity is not implemented yet.)
+    \item Datatype information for the range is lost on Datatype Properties.
+\end{itemize}
+
+\subsection{XML to RDF conversion}
+The current implementation of the XML to RDF conversion takes a very naive
+approach to extracting information from the XML data. It can be immensely
+augmented by using statistical properties and methods from Information
+Retrieval.
+
+The fundamental difference between plain XML and semantic data is explained in
+section~\ref{sec:background}. For example consider
+document~\ref{ex:xml-rec}\footnote{Based on the Music Ontology
+- http://purl.org/ontology/mo/}. Here it is quite evident to a human that
+Record ``OK Computer'' contains the track ``Paranoid Android'' of duration
+384000ms. We use the known data properties of tags found in the data to figure
+out if a datatype property reference can be resolved to a known instance
+specified somewhere else in the document. We observe that the value of
+a datatype property and the type of a instance can uniquely identify the
+instance we are referring to\footnote{Although multiple instances can have the
+    same value of a datatype property, e. g. \texttt{Person} having
+    \texttt{age}, we assume that an XML representation will not use
+a non-injective property to refer to instances}. Hence our lookup table is
+a mapping from $(type, value)\rightarrow instance$. Although our algorithm
+accepts plain XML, it has some preconditions for it to work:
+
+\begin{itemize}
+    \item The tag names should be class or property names from a known ontology.
+    \item Attribute names should be a datatype property name from an known ontology.
+    \item The top level tags should be class names.
+    \item The conversion considers only one level of nesting in associating
+        data. For example, in document~\ref{ex:xml-bad} it won't infer that the
+        artist is called Radiohead.
+\end{itemize}
+
+Since these datatype property based references can be present after their use
+(in terms of sequential bytes), unresolved references have to be maintained
+until the entire document has been parsed, which are then resolved to create
+a set of RDF triples. Based on our assumption that the top level tags are class
+names, we find the right class in the clusterspace from the tag name. In case
+of multiple possibilities, the implementation currently chooses the first one.
+This allows us to know what properties may be defined by the inner tags. If
+there are no inner tags or attributes, this XML node is itself a reference.
+Otherwise this node maps to a new RDF subject instance with the
+rdf:type\footnote{http://www.w3.org/1999/02/22-rdf-syntax-ns\#type} as the
+class found for the tag name.
+
+All attributes can only be datatype property instances, so we use the attribute
+name to lookup the datatype property and the attribute value as the value for
+this instance. A child tag can be:
+\begin{enumerate}
+    \item \emph{A datatype property} - In this case the child element can only
+        have text content. This gives us information about the current instance
+        and is added to the lookup table. A triple is also created.
+    \item \emph{An object property} - If the child has only text, then the
+        object in the $(subject, property, object)$ triple is a reference. This
+        reference can be from any of the classes in the range of the object
+        property. If the child has tags then each of those tags are treated as
+        a possible description of an instance and parsed recursively. TODO:
+        mention using statistics to deal with a tag defined only by its
+        properties.
+    \item \emph{A class} - In this case the tag is defining an instance or
+        reference. Based on the known object properties, our system attempts to
+        find possible object properties on the $subject$ that have the class in
+        their range. The first of these is picked to create the triple.
+\end{enumerate}
+
+\begin{figure}
+    \caption{Example XML document.}
+    \label{ex:xml-rec}
+    \begin{verbatim}
+    <Track>
+        <title>Paranoid Android</title>
+        <duration>384000</duration>
+    </Track>
+    <Record title=``OK Computer''>
+        <track>
+            Paranoid Android
+        </track>
+    </Record>
+    \end{verbatim}
+\end{figure}
+
+\begin{figure}
+    \caption{Bad XML}
+    \label{ex:xml-bad}
+    \begin{verbatim}
+    <MusicArtist>
+        <Record>
+            <title>OK Computer</title>
+            <name>Radiohead</name>
+        </Record>
+    </MusicArtist>
+    \end{verbatim}
+\end{figure}
+
+\subsection{Storing RDF in Cassandra}
+
+TODO: What is Cassandra and Why Cassandra?
+
+The Cassandra data model allows nested storage using super columns. We use the
+approach described by Ladwig and Harth\cite{ladwig:11}, but only maintain two
+models - SPO and OPS. In SPO each subject instance is a row key, the predicate
+name is the supercolumn key and each object is one column. The OPS index is
+used for performance improvements. We provide two additional Column-families in
+our system.
+
+\begin{enumerate}
+    \item \emph{Concepts} - Each row is the full IRI of a class from the known
+        ontologies. Every column is the IRI of an instance of that class. In
+        addition instances of subclasses are also stored for the class.
+
+    \item \emph{InstanceData} - Since our system is designed for data mining,
+        the SPARQL response is not simply a set of triples, but full RDF dumps
+        for each subject of the triples in the final result. To prevent having
+        to iterate over all of an instances properties every time, a complete
+        RDF/XML representation of every instance is kept in this column family,
+        indexed by the IRI of the instance.
+
+\end{enumerate}
+
+\begin{figure}
+    \caption{Clusterspace formation}
+    \label{cs-algo}
+    TODO this figure
+\end{figure}
+
+\begin{figure}
+    \caption{Link class into Clusterspace}
+    \label{cs-link-class}
+    \begin{algorithmic}
+        \Function{Link-Class}{$c$}
+            \Require c is a previously unknown class
+            \State $n\gets $ a unique node representing $c$ in the clusterspace
+            \State $queue\gets $ a queue initially containing the roots of the clusterspace
+            \State $linked\gets False$
+            \While{not $linked$ and $queue$ is not empty}
+            \State $x\gets \Call{dequeue}{queue}$
+                \State $linked\gets \Call{Compare-Classes}{n,x}$
+                \If{not $linked$}
+                    \State Enqueue children of x
+                \Else
+                    exit loop
+                \EndIf
+            \EndWhile
+
+            \If{not $linked$}
+                \State insert $n$ as a root
+            \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{figure}
+
+\begin{figure}
+    \caption{Insert class into clusterspace at right spot}
+    \label{cs-compare-classes}
+    \begin{algorithmic}
+        \Function{Compare-Classes}{$n$,$x$}
+            \State $nClass\gets$ OWL class for Node $n$
+            \State $xClass\gets$ OWL class for Node $x$
+            
+            \If{$nClass$ has $xClass$ as equivalent class}
+                \State \Call{Add-Edge}{$n$,$x$} of type $EQUIVALENT$
+                \State \Return True
+            \ElsIf{$xClass$ is a superclass of $nClass$}
+                \For{$subclass\gets$ each child node of $x$}
+                    \If{$nClass$ has $subclass$ as equivalent class}
+                        \State \Call{Add-Edge}{$n$,$subclass$} of type $EQUIVALENT$
+                        \State \Return True
+                    \ElsIf{$subclass$ is a subclass of $nClass$}
+                        \State \Call{Remove-Edge}{$subclass$, $xClass$}
+                        \State \Call{Add-Edge}{$subclass$, $nClass$}
+                    \EndIf
+                \EndFor
+
+                \State \Call{Add-Edge}{$nClass$, $xClass$}
+
+                \For{$sibling\gets$ each sibling of $x$}
+                    \If{$siblingClass$ is a superclass of $nClass$ in the ontology}
+                        \State \Call{Compare-Classes}{$n$, $sibling$}
+                    \EndIf
+                \EndFor
+            \ElsIf{$xClass$ is a subclass of $nClass$}
+                \State \Call{Add-Edge}{$x$, $n$}
+
+                \For{$sibling\gets$ each sibling of $x$}
+                    \If{$siblingClass$ is a superclass of $nClass$ in the ontology}
+                        \State \Call{Add-Edge}{$sibling$, $n$}
+                        \If{\Call{Is-Root}{$sibling$}}
+                            \State \Call{Remove-Root}{$sibling$}
+                            \State \Call{Add-Root}{$n$}
+                        \EndIf
+                    \EndIf
+                \EndFor
+
+                \If{\Call{Is-Root}{$x$}}
+                    \State \Call{Remove-Root}{$x$}
+                    \State \Call{Add-Root}{$n$}
+                \EndIf
+
+                \State \Return False
+            \EndIf
+
+            \State \Return False
+        \EndFunction
+    \end{algorithmic}
+\end{figure}
+
+\begin{figure*}
+    \caption{XML to RDF conversion}
+    \label{xml-to-rdf-algo}
+    \begin{algorithmic}
+        \Function{Convert}{$xml$}
+            \Require $xml$ is a well formatted XML document
+            \Ensure A set of valid RDF triples is emitted
+
+            \State $unresolved\gets empty list$
+            \State $typePropInstances\gets$ map from $(String, String) \rightarrow resource$
+
+            \For{$element \gets$ children of root of $xml$}
+                \State \Call{ToRDF}{$element$}
+            \EndFor
+
+            \For{$triple$ in $unresolved$}
+                \State $resolved \gets$ \Call{Resolve}{$triple$}
+                \State \Call{Emit}{$resolved$} if valid
+            \EndFor
+        \EndFunction
+
+        \Function{Resolve}{$triple$}
+            \Require $triple$ is $(subject, predicate, object)$
+            \If{$object$ is a resource}
+                \State \Return $(subject, predicate, object)$
+            \ElsIf{$object$ is a Lookup}
+                \State $type\gets object.type$
+                \State $val\gets object.value$
+                \If{\Call{Contains}{$typePropInstances$,$(type, val)$}}
+                    \State \Return $(subject, predicate, typePropInstances[type,val])$
+                \EndIf
+                \State \Return $()$
+            \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{figure*}
+
+\begin{figure*}
+    \caption{Single element to RDF}
+    \label{to-rdf-algo}
+    \begin{algorithmic}
+        \Function{ToRDF}{$element$}
+            \State $node\gets$ Clusterspace node having class name $element$
+            \If{$element$ has no attributes and no child elements}
+                \State \Return \Call{Lookup}{$node$, $elementText$}
+            \EndIf
+
+            \State $subject\gets$ empty resource
+            \State \Call{Emit}{$subject$, ``type'', $node$}
+
+            \ForAll{attributes of $element$}
+                \If{$attribute$ is a datatype property of $node$}
+                    \State \Call{Emit}{$subject$, $property$, $attributeValue$}
+                    \State \Call{Add}{$typePropInstances$, $(node,attributeValue)\rightarrow subject$}
+                \EndIf
+            \EndFor
+
+            \ForAll{children of $element$}
+                \If{$child$ has no children}
+                    \If{$child$ is a datatype property}
+                        \State \Call{Emit}{$subject$, $property$, $childText$}
+                        \State \Call{Add}{$typePropInstances$, $(node,childText)\rightarrow subject$}
+                    \ElsIf{$child$ is an object property}
+                        \State $range\gets$ range of object property
+                        \State Add $(subject,property,\Call{Lookup}{range,childText})$ to $unresolved$
+                    \EndIf
+                    \State Continue
+                \EndIf
+
+                \If{$child$ is an object property}
+                    \ForAll{sub-children of $child$}
+                        \State $val\gets$ \Call{ToRDF}{$subchild$}
+                        \If{$val$ can be resolved to resource}
+                            \State $valResource\gets$ \Call{Resolve}{$val$}
+                            \State \Call{Emit}{$subject$, $property$, $valResource$}
+                        \Else
+                            \State Add $(subject,property,val)$ to $unresolved$
+                        \EndIf
+                    \EndFor
+                    \State Continue
+                \EndIf
+
+                \If{$child$ is a class}
+                    \State $property\gets$ a possible property $n\rightarrow child$
+                    \State $object\gets$ \Call{ToRDF}{$child$}
+                    \State Add $(subject,property,object)$ to $unresolved$
+                \EndIf
+            \EndFor
+
+            \State \Return $subject$
+        \EndFunction
+    \end{algorithmic}
+\end{figure*}
+
+% You must have at least 2 lines in the paragraph with the drop letter
+% (should never be an issue)
+
+% needed in second column of first page if using \pubid
+%\pubidadjcol
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,200801011}
+
+% biography section
+% 
+\end{document}
+
