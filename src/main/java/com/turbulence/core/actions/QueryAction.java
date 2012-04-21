@@ -58,6 +58,7 @@ public class QueryAction implements Action {
             };
         }
 
+        ClusterSpaceJenaGraph.queryMapTime = 0;
         Model model = ModelFactory.createModelForGraph(new ClusterSpaceJenaGraph());
         QueryExecution exec = QueryExecutionFactory.create(q, model);
         // TODO: uncomment once debugging is done
@@ -81,6 +82,7 @@ public class QueryAction implements Action {
                         }
                     }
                 }
+                logger.warn("ClusterSpace operations took " + (ClusterSpaceJenaGraph.queryMapTime) + " ms");
                 logger.warn("RESULT set size " + rowKeys.size());
 
                 // TODO: batch this

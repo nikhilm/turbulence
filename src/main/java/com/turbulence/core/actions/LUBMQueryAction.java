@@ -53,6 +53,7 @@ public class LUBMQueryAction implements Action {
             return r;
         }
 
+        ClusterSpaceJenaGraph.queryMapTime = 0;
         Model model = ModelFactory.createModelForGraph(new ClusterSpaceJenaGraph());
         QueryExecution exec = QueryExecutionFactory.create(q, model);
         // TODO: uncomment once debugging is done
@@ -65,6 +66,7 @@ public class LUBMQueryAction implements Action {
             resultSet.next();
             count++;
         }
+        logger.warn("ClusterSpace operations took " + (ClusterSpaceJenaGraph.queryMapTime) + " ms");
 
         Result r = new Result();
         r.success = true;

@@ -92,7 +92,9 @@ class ClusterSpaceJenaIterator extends NiceIterator<Triple> {
     }
 
     public Triple next() {
+        long _t = System.currentTimeMillis();
         org.neo4j.graphdb.Relationship rel = internal.next();
+        ClusterSpaceJenaGraph.queryMapTime += (System.currentTimeMillis() - _t);
 
         Node sub = Node.createURI((String)rel.getStartNode().getProperty("IRI", "bombaderror"));
 
@@ -123,6 +125,7 @@ public class ClusterSpaceJenaGraph extends GraphBase {
         LogFactory.getLog(ClusterSpaceJenaGraph.class);
 
     private ClusterSpace cs;
+    public static long queryMapTime = 0;
 
     /**
      * Constructs a new instance.
@@ -133,11 +136,15 @@ public class ClusterSpaceJenaGraph extends GraphBase {
     }
 
     private org.neo4j.graphdb.Node getClass(final String classIRI) {
+        long _t = System.currentTimeMillis();
         Index<org.neo4j.graphdb.Node> conceptIndex = cs.index().forNodes("conceptIndex");
-        return conceptIndex.get("CONCEPT", classIRI).getSingle();
+        org.neo4j.graphdb.Node n = conceptIndex.get("CONCEPT", classIRI).getSingle();
+        queryMapTime += (System.currentTimeMillis() - _t);
+        return n;
     }
 
     private org.neo4j.graphdb.Node getObjectProperty(final String objectPropertyIRI) {
+        long _t = System.currentTimeMillis();
         String ontologyIRI;
         if (objectPropertyIRI.lastIndexOf('#') != -1) {
             ontologyIRI = objectPropertyIRI.substring(0, objectPropertyIRI.lastIndexOf('#'));
@@ -156,13 +163,17 @@ public class ClusterSpaceJenaGraph extends GraphBase {
             }
         }, ClusterSpace.InternalRelTypes.SOURCE_ONTOLOGY, Direction.INCOMING);
 
-        if (trav.iterator().hasNext())
+        if (trav.iterator().hasNext()) {
+            queryMapTime += (System.currentTimeMillis() - _t);
             return trav.iterator().next();
+        }
+        queryMapTime += (System.currentTimeMillis() - _t);
 
         return null;
     }
 
     private ClusterSpaceJenaIterator allClasses() {
+        long _t = System.currentTimeMillis();
         List<Iterator<Relationship>> rootIterators = new ArrayList<Iterator<Relationship>>();
         for (org.neo4j.graphdb.Node root : Traversal.description()
                 .breadthFirst()
@@ -178,6 +189,7 @@ public class ClusterSpaceJenaGraph extends GraphBase {
                 .traverse(root);
             rootIterators.add(trav.relationships().iterator());
         }
+        queryMapTime += (System.currentTimeMillis() - _t);
 
         return new ClusterSpaceJenaIterator(IteratorUtils.chainedIterator(rootIterators));
     }
@@ -235,6 +247,7 @@ public class ClusterSpaceJenaGraph extends GraphBase {
         final Node sub  = triple.getSubject();
         final Node pred = triple.getPredicate();
         final Node obj  = triple.getObject();
+        //logger.warn(sub + " -- " + pred + " -- " + obj);
 
         TraversalDescription trav = Traversal.description()
                                     .breadthFirst()
@@ -260,7 +273,11 @@ public class ClusterSpaceJenaGraph extends GraphBase {
                 throw new QueryExecException("'a' predicate expects URI object");
 
             ExtendedIterator<Triple> total = NullIterator.instance();
+            long _t = System.currentTimeMillis();
             for (org.neo4j.graphdb.Node n : classCover(obj.getURI())) {
+                // every iteration leads to more traversal that's why
+                queryMapTime += (System.currentTimeMillis() - _t);
+
                 String classIRI = (String)n.getProperty("IRI");
 
                 SliceQuery<String, String, String> query = HFactory.createSliceQuery(TurbulenceDriver.getKeyspace(), StringSerializer.get(), StringSerializer.get(), StringSerializer.get());
@@ -269,6 +286,7 @@ public class ClusterSpaceJenaGraph extends GraphBase {
 
                 Iterator<HColumn<String, String>> it = new AllColumnsIterator<String, String>(query);
                 total = total.andThen(new ConceptsInstancesIterator(classIRI, it));
+                _t = System.currentTimeMillis();
             }
             return total;
         }
@@ -287,8 +305,10 @@ public class ClusterSpaceJenaGraph extends GraphBase {
 
                 // class cover is handled by
                 // handleCustomRelationshipSubjectConcept
+                final long _t = System.currentTimeMillis();
                 Map1<Relationship, Iterator<Triple>> map = new Map1<Relationship, Iterator<Triple>>() {
                     public Iterator<Triple> map1(Relationship r) {
+                        queryMapTime += (System.currentTimeMillis() - _t);
                         return handleCustomRelationshipSubjectConcept(sub, Node.createURI((String)r.getProperty("IRI")), obj);
                     }
                 };
@@ -370,11 +390,13 @@ public class ClusterSpaceJenaGraph extends GraphBase {
             }
         });
 
+            long _t = System.currentTimeMillis();
         for (org.neo4j.graphdb.Node n : superclasses(rangeClass)) {
             Iterator<org.neo4j.graphdb.Node> it = trav.traverse(n).nodes().iterator();
             if (it.hasNext())
                 return it.next();
         }
+            queryMapTime += (System.currentTimeMillis() - _t);
         return null;
     }
 
@@ -406,18 +428,20 @@ public class ClusterSpaceJenaGraph extends GraphBase {
             org.neo4j.graphdb.Node domain = isObjectPropertyRange(objectPropertyIRI, objectClass);
             if (domain == null)
                 return new NullIterator<Triple>();
-            logger.warn("Domain " + domain.getProperty("IRI"));
+            //logger.warn("Domain " + domain.getProperty("IRI"));
 
             // for each class in cover of domain
                 // for every instance of the class
                     // if instance -> pred -> o  and o.type in object cover
                         // emit the instance -> pred -> o pair
+            long _t = System.currentTimeMillis();
             final Set<String> rangeCoverIRIs = IteratorCollection.iteratorToSet(new Map1Iterator<org.neo4j.graphdb.Node, String>(new Map1<org.neo4j.graphdb.Node, String>() {
                 public String map1(org.neo4j.graphdb.Node from) {
                     return (String) from.getProperty("IRI");
                 }
             }, classCover(obj.getURI()).iterator()));
-            logger.warn("Range cover " + rangeCoverIRIs);
+            queryMapTime += (System.currentTimeMillis() - _t);
+            //logger.warn("Range cover " + rangeCoverIRIs);
 
             Filter<HColumn<String, String>> filter = new Filter<HColumn<String, String>>() {
                 public boolean accept(HColumn<String, String> o) {
@@ -441,7 +465,9 @@ public class ClusterSpaceJenaGraph extends GraphBase {
 
             ExtendedIterator<Triple> result = NullIterator.instance();
             final Filter<HColumn<String, String>> anyFilter = Filter.any();
+            _t = System.currentTimeMillis();
             for (org.neo4j.graphdb.Node domainNode : classCover((String)domain.getProperty("IRI"))) {
+                queryMapTime += (System.currentTimeMillis() - _t);
                 SliceQuery<String, String, String> query = HFactory.createSliceQuery(TurbulenceDriver.getKeyspace(), StringSerializer.get(), StringSerializer.get(), StringSerializer.get());
                 query.setColumnFamily("Concepts");
                 query.setKey((String)domainNode.getProperty("IRI"));
@@ -454,6 +480,7 @@ public class ClusterSpaceJenaGraph extends GraphBase {
                 };
                 Map1Iterator<HColumn<String, String>, Iterator<Triple>> instanceTriples = new Map1Iterator<HColumn<String, String>, Iterator<Triple>>(map, instances);
                 result = result.andThen(new IteratorIterator<Triple>(instanceTriples));
+                _t = System.currentTimeMillis();
             }
             return result;
         }
@@ -485,11 +512,14 @@ public class ClusterSpaceJenaGraph extends GraphBase {
         org.neo4j.graphdb.Node objectClass = null;
         ExtendedIterator<HColumn<String, String>> instances = NullIterator.instance();
 
+        long _t = System.currentTimeMillis();
         for (org.neo4j.graphdb.Node n : classCover(sub.getURI())) {
+            queryMapTime += (System.currentTimeMillis() - _t);
             SliceQuery<String, String, String> query = HFactory.createSliceQuery(TurbulenceDriver.getKeyspace(), StringSerializer.get(), StringSerializer.get(), StringSerializer.get());
             query.setColumnFamily("Concepts");
             query.setKey((String)n.getProperty("IRI"));
             instances = instances.andThen(new AllColumnsIterator(query));
+            _t = System.currentTimeMillis();
         }
 
         if (obj.equals(Node.ANY)) {
@@ -515,11 +545,13 @@ public class ClusterSpaceJenaGraph extends GraphBase {
                 // for every instance of the class
                     // if instance -> pred -> o  and o.type in object cover
                         // emit the instance -> pred -> o pair
+            _t = System.currentTimeMillis();
             final Set<String> rangeCoverIRIs = IteratorCollection.iteratorToSet(new Map1Iterator<org.neo4j.graphdb.Node, String>(new Map1<org.neo4j.graphdb.Node, String>() {
                 public String map1(org.neo4j.graphdb.Node from) {
                     return (String) from.getProperty("IRI");
                 }
             }, classCover(obj.getURI()).iterator()));
+            queryMapTime += (System.currentTimeMillis() - _t);
 
             final Filter<HColumn<String, String>> filter = new Filter<HColumn<String, String>>() {
                 public boolean accept(HColumn<String, String> o) {
@@ -552,11 +584,13 @@ public class ClusterSpaceJenaGraph extends GraphBase {
             return WrappedIterator.create(new IteratorIterator<Triple>(instanceTriples));
         }
         else if (obj.isURI()) {
+            _t = System.currentTimeMillis();
             final Set<String> domainIRIs = IteratorCollection.iteratorToSet(new Map1Iterator<org.neo4j.graphdb.Node, String>(new Map1<org.neo4j.graphdb.Node, String>() {
                 public String map1(org.neo4j.graphdb.Node from) {
                     return (String) from.getProperty("IRI");
                 }
             }, classCover(sub.getURI()).iterator()));
+            queryMapTime += (System.currentTimeMillis() - _t);
 
             final Filter<HColumn<String, String>> filter = new Filter<HColumn<String, String>>() {
                 public boolean accept(HColumn<String, String> o) {

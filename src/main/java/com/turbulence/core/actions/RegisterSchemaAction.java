@@ -144,6 +144,7 @@ public class RegisterSchemaAction implements Action {
 
         OWLReasoner reasoner = PelletReasonerFactory.getInstance().createReasoner(ont);
 
+        long t = System.currentTimeMillis();
         for (OWLClass c : ont.getClassesInSignature(false /*exclude imports closure*/)) {
             tx = cs.beginTx();
             try {
@@ -164,6 +165,8 @@ public class RegisterSchemaAction implements Action {
                 tx.finish();
             }
         }
+        logger.warn("Class heirarchy took: " + (System.currentTimeMillis() - t)/1000.0 + " seconds");
+        logger.warn("Roots: " + getRoots().size());
 
         for (OWLAxiom c : ont.getAxioms(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
             OWLObjectPropertyDomainAxiom ax = (OWLObjectPropertyDomainAxiom) c;
@@ -175,7 +178,7 @@ public class RegisterSchemaAction implements Action {
 
             tx = cs.beginTx();
             try {
-                Node rNode = linkObjectProperty(ax.getProperty().asOWLObjectProperty(), reasoner);
+                Node rNode = linkProperty(ax.getProperty().asOWLObjectProperty(), reasoner);
                 if (rNode != null)
                     rNode.createRelationshipTo(ontNode, ClusterSpace.InternalRelTypes.SOURCE_ONTOLOGY);
                 for (OWLClassExpression range : ax.getProperty().getRanges(ont)) {
@@ -196,7 +199,6 @@ public class RegisterSchemaAction implements Action {
             OWLDataPropertyDomainAxiom ax = (OWLDataPropertyDomainAxiom) c;
             if (ax.getProperty().isAnonymous())
                 continue;
-            logger.warn(ax.getProperty().asOWLDataProperty().getIRI().toString());
             if (ax.getDomain().isAnonymous())
                 continue;
 
@@ -225,13 +227,14 @@ public class RegisterSchemaAction implements Action {
             if (dealt.contains(pr.getIRI().toString()))
                 continue;
             if (pr.getDomains(ont).isEmpty()) {
-                for (OWLClass c : ont.getClassesInSignature(false /*exclude imports closure*/)) {
+                Collection<Node> roots = getRoots();
+                for (Node root : roots) {
                     if (pr.getRanges(ont).isEmpty()) {
-                        createDataProperty(pr.getIRI(), pr, c, ont.getOWLOntologyManager().getOWLDataFactory().getOWLDatatype(IRI.create("http://www.w3.org/2001/XMLSchema#string")));
+                        createDataProperty(pr.getIRI(), pr, root, ont.getOWLOntologyManager().getOWLDataFactory().getOWLDatatype(IRI.create("http://www.w3.org/2001/XMLSchema#string")));
                     }
                     else {
                         for (OWLDataRange r : pr.getRanges(ont))
-                            createDataProperty(pr.getIRI(), pr, c, r);
+                            createDataProperty(pr.getIRI(), pr, root, r);
                     }
                 }
             }
@@ -570,7 +573,7 @@ public class RegisterSchemaAction implements Action {
         return n;
     }
 
-    private Node linkObjectProperty(OWLObjectProperty property, OWLReasoner reasoner) {
+    private Node linkProperty(OWLProperty property, OWLReasoner reasoner) {
         // shouldn't create a new Node if a node for property already exists
         // FIXME
         Queue<Node> queue = new LinkedList<Node>();
@@ -625,11 +628,7 @@ public class RegisterSchemaAction implements Action {
         }
     }
 
-    private void createDataProperty(IRI ontologyIRI, OWLDataProperty property, OWLClass domain, OWLDataRange range) {
-        Node domainNode = getClassNode(domain);
-        if (domainNode == null)
-            return;
-
+    private void createDataProperty(IRI ontologyIRI, OWLDataProperty property, Node domainNode, OWLDataRange range) {
         Transaction tx = cs.beginTx();
         try {
             Relationship rel = domainNode.createRelationshipTo(xsdStringNode, ClusterSpace.PublicRelTypes.DATATYPE_RELATIONSHIP);
@@ -640,6 +639,13 @@ public class RegisterSchemaAction implements Action {
         } finally {
             tx.finish();
         }
+
+    }
+
+    private void createDataProperty(IRI ontologyIRI, OWLDataProperty property, OWLClass domain, OWLDataRange range) {
+        Node domainNode = getClassNode(domain);
+        if (domainNode == null)
+            return;
     }
 
 }
