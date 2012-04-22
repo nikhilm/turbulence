@@ -1,0 +1,829 @@
+
+ubuntu@ip-10-195-77-235:~/lubminterface$ time mvn exec:java -Dexec.mainClass=edu.lehigh.swat.bench.ubt.Test -Dexec.args='load config.kb.turbulence'
+[INFO] Scanning for projects...
+[INFO] Searching repository for plugin with prefix: 'exec'.
+[INFO] ------------------------------------------------------------------------
+[INFO] Building lubminterface
+[INFO]    task-segment: [exec:java]
+[INFO] ------------------------------------------------------------------------
+[INFO] Preparing exec:java
+[INFO] No goals needed for project - skipping
+[INFO] [exec:java {execution: default-cli}]
+
+Started loading TURBULENCE_20
+/home/ubuntu/d20
+/home/ubuntu/d20/University8_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_12.owl time: 16371
+/home/ubuntu/d20/University15_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_8.owl time: 11339
+/home/ubuntu/d20/University16_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_6.owl time: 8464
+/home/ubuntu/d20/University8_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_4.owl time: 6766
+/home/ubuntu/d20/University1_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_12.owl time: 8764
+/home/ubuntu/d20/University0_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_13.owl time: 8992
+/home/ubuntu/d20/University4_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_5.owl time: 7423
+/home/ubuntu/d20/University4_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_1.owl time: 7838
+/home/ubuntu/d20/University15_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_2.owl time: 7875
+/home/ubuntu/d20/University18_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_14.owl time: 7122
+/home/ubuntu/d20/University10_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_16.owl time: 7121
+/home/ubuntu/d20/University4_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_17.owl time: 10913
+/home/ubuntu/d20/University0_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_7.owl time: 8146
+/home/ubuntu/d20/University9_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_8.owl time: 7114
+/home/ubuntu/d20/University10_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_4.owl time: 6808
+/home/ubuntu/d20/University10_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_18.owl time: 8352
+/home/ubuntu/d20/University7_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_15.owl time: 8559
+/home/ubuntu/d20/University5_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_6.owl time: 8223
+/home/ubuntu/d20/University7_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_8.owl time: 9059
+/home/ubuntu/d20/University6_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_16.owl time: 7765
+/home/ubuntu/d20/University19_23.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_23.owl time: 6884
+/home/ubuntu/d20/University14_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_7.owl time: 6579
+/home/ubuntu/d20/University16_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_2.owl time: 8166
+/home/ubuntu/d20/University17_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_10.owl time: 7569
+/home/ubuntu/d20/University10_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_1.owl time: 7969
+/home/ubuntu/d20/University2_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_8.owl time: 8638
+/home/ubuntu/d20/University11_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_8.owl time: 7310
+/home/ubuntu/d20/University13_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_5.owl time: 7283
+/home/ubuntu/d20/University4_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_14.owl time: 7771
+/home/ubuntu/d20/University13_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_8.owl time: 7555
+/home/ubuntu/d20/University11_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_15.owl time: 6628
+/home/ubuntu/d20/University5_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_2.owl time: 7022
+/home/ubuntu/d20/University11_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_12.owl time: 8417
+/home/ubuntu/d20/University1_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_8.owl time: 6272
+/home/ubuntu/d20/University19_21.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_21.owl time: 7710
+/home/ubuntu/d20/University18_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_18.owl time: 6996
+/home/ubuntu/d20/University18_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_5.owl time: 7101
+/home/ubuntu/d20/University17_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_9.owl time: 7220
+/home/ubuntu/d20/University19_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_18.owl time: 8207
+/home/ubuntu/d20/University5_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_11.owl time: 7359
+/home/ubuntu/d20/University13_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_11.owl time: 6871
+/home/ubuntu/d20/University15_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_16.owl time: 7986
+/home/ubuntu/d20/University0_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_1.owl time: 6965
+/home/ubuntu/d20/University6_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_17.owl time: 7502
+/home/ubuntu/d20/University3_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_1.owl time: 7235
+/home/ubuntu/d20/University0_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_8.owl time: 8149
+/home/ubuntu/d20/University4_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_4.owl time: 8439
+/home/ubuntu/d20/University18_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_12.owl time: 8629
+/home/ubuntu/d20/University3_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_3.owl time: 6876
+/home/ubuntu/d20/University0_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_11.owl time: 7910
+/home/ubuntu/d20/University3_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_14.owl time: 6110
+/home/ubuntu/d20/University8_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_16.owl time: 8299
+/home/ubuntu/d20/University14_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_11.owl time: 8233
+/home/ubuntu/d20/University2_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_0.owl time: 6575
+/home/ubuntu/d20/University6_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_20.owl time: 6204
+/home/ubuntu/d20/University12_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_8.owl time: 7685
+/home/ubuntu/d20/University11_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_18.owl time: 6684
+/home/ubuntu/d20/University1_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_3.owl time: 8804
+/home/ubuntu/d20/University11_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_14.owl time: 8089
+/home/ubuntu/d20/University11_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_6.owl time: 6684
+/home/ubuntu/d20/University12_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_15.owl time: 8283
+/home/ubuntu/d20/University13_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_15.owl time: 6531
+/home/ubuntu/d20/University11_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_3.owl time: 9141
+/home/ubuntu/d20/University1_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_9.owl time: 8968
+/home/ubuntu/d20/University4_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_0.owl time: 7878
+/home/ubuntu/d20/University7_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_13.owl time: 7951
+/home/ubuntu/d20/University7_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_4.owl time: 7487
+/home/ubuntu/d20/University1_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_10.owl time: 7306
+/home/ubuntu/d20/University17_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_18.owl time: 8228
+/home/ubuntu/d20/University12_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_0.owl time: 7761
+/home/ubuntu/d20/University10_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_0.owl time: 6696
+/home/ubuntu/d20/University15_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_6.owl time: 7997
+/home/ubuntu/d20/University12_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_20.owl time: 7334
+/home/ubuntu/d20/University18_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_11.owl time: 7658
+/home/ubuntu/d20/University19_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_8.owl time: 8509
+/home/ubuntu/d20/University17_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_6.owl time: 9620
+/home/ubuntu/d20/University17_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_15.owl time: 8208
+/home/ubuntu/d20/University15_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_1.owl time: 8552
+/home/ubuntu/d20/University8_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_6.owl time: 6970
+/home/ubuntu/d20/University3_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_2.owl time: 5921
+/home/ubuntu/d20/University6_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_6.owl time: 7829
+/home/ubuntu/d20/University17_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_13.owl time: 7988
+/home/ubuntu/d20/University4_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_7.owl time: 6526
+/home/ubuntu/d20/University13_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_3.owl time: 7338
+/home/ubuntu/d20/University11_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_1.owl time: 7029
+/home/ubuntu/d20/University12_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_6.owl time: 7276
+/home/ubuntu/d20/University18_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_1.owl time: 8956
+/home/ubuntu/d20/University16_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_14.owl time: 8617
+/home/ubuntu/d20/University17_22.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_22.owl time: 7364
+/home/ubuntu/d20/University19_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_0.owl time: 7304
+/home/ubuntu/d20/University14_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_13.owl time: 6582
+/home/ubuntu/d20/University2_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_14.owl time: 7315
+/home/ubuntu/d20/University9_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_9.owl time: 8655
+/home/ubuntu/d20/University16_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_7.owl time: 7845
+/home/ubuntu/d20/University3_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_12.owl time: 9963
+/home/ubuntu/d20/University15_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_4.owl time: 8025
+/home/ubuntu/d20/University9_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_11.owl time: 7925
+/home/ubuntu/d20/University19_22.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_22.owl time: 7858
+/home/ubuntu/d20/University4_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_20.owl time: 7779
+/home/ubuntu/d20/University8_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_0.owl time: 8276
+/home/ubuntu/d20/University1_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_14.owl time: 7349
+/home/ubuntu/d20/University9_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_7.owl time: 8529
+/home/ubuntu/d20/University12_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_18.owl time: 8798
+/home/ubuntu/d20/University18_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_16.owl time: 6400
+/home/ubuntu/d20/University10_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_8.owl time: 8065
+/home/ubuntu/d20/University13_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_10.owl time: 8575
+/home/ubuntu/d20/University16_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_17.owl time: 6490
+/home/ubuntu/d20/University12_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_10.owl time: 7971
+/home/ubuntu/d20/University1_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_2.owl time: 7748
+/home/ubuntu/d20/University17_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_16.owl time: 7302
+/home/ubuntu/d20/University3_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_11.owl time: 8539
+/home/ubuntu/d20/University4_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_15.owl time: 6591
+/home/ubuntu/d20/University15_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_9.owl time: 7078
+/home/ubuntu/d20/University2_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_12.owl time: 8527
+/home/ubuntu/d20/University5_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_14.owl time: 7383
+/home/ubuntu/d20/University12_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_7.owl time: 7249
+/home/ubuntu/d20/University9_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_1.owl time: 8846
+/home/ubuntu/d20/University12_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_9.owl time: 7742
+/home/ubuntu/d20/University19_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_12.owl time: 8416
+/home/ubuntu/d20/University8_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_9.owl time: 7359
+/home/ubuntu/d20/University7_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_16.owl time: 8765
+/home/ubuntu/d20/University4_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_10.owl time: 8652
+/home/ubuntu/d20/University13_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_17.owl time: 7532
+/home/ubuntu/d20/University6_21.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_21.owl time: 7438
+/home/ubuntu/d20/University10_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_12.owl time: 7118
+/home/ubuntu/d20/University19_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_17.owl time: 6165
+/home/ubuntu/d20/University5_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_10.owl time: 7955
+/home/ubuntu/d20/University7_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_2.owl time: 7485
+/home/ubuntu/d20/University9_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_6.owl time: 6800
+/home/ubuntu/d20/University13_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_0.owl time: 6505
+/home/ubuntu/d20/University10_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_11.owl time: 7477
+/home/ubuntu/d20/University2_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_5.owl time: 8415
+/home/ubuntu/d20/University8_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_2.owl time: 8087
+/home/ubuntu/d20/University6_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_11.owl time: 7959
+/home/ubuntu/d20/University3_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_6.owl time: 7661
+/home/ubuntu/d20/University13_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_2.owl time: 6830
+/home/ubuntu/d20/University19_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_2.owl time: 8420
+/home/ubuntu/d20/University12_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_2.owl time: 6098
+/home/ubuntu/d20/University16_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_4.owl time: 7134
+/home/ubuntu/d20/University12_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_19.owl time: 6821
+/home/ubuntu/d20/University4_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_8.owl time: 7317
+/home/ubuntu/d20/University15_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_3.owl time: 7202
+/home/ubuntu/d20/University19_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_14.owl time: 7365
+/home/ubuntu/d20/University1_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_15.owl time: 9173
+/home/ubuntu/d20/University3_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_0.owl time: 7594
+/home/ubuntu/d20/University11_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_16.owl time: 7437
+/home/ubuntu/d20/University4_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_19.owl time: 7276
+/home/ubuntu/d20/University0_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_12.owl time: 7160
+/home/ubuntu/d20/University1_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_1.owl time: 8112
+/home/ubuntu/d20/University18_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_2.owl time: 7960
+/home/ubuntu/d20/University17_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_7.owl time: 11168
+/home/ubuntu/d20/University4_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_13.owl time: 9875
+/home/ubuntu/d20/University17_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_3.owl time: 10372
+/home/ubuntu/d20/University14_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_6.owl time: 8138
+/home/ubuntu/d20/University15_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_12.owl time: 7281
+/home/ubuntu/d20/University14_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_9.owl time: 9965
+/home/ubuntu/d20/University5_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_8.owl time: 7742
+/home/ubuntu/d20/University15_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_13.owl time: 6812
+/home/ubuntu/d20/University12_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_11.owl time: 6322
+/home/ubuntu/d20/University17_21.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_21.owl time: 6729
+/home/ubuntu/d20/University13_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_18.owl time: 8027
+/home/ubuntu/d20/University11_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_19.owl time: 6826
+/home/ubuntu/d20/University15_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_10.owl time: 6966
+/home/ubuntu/d20/University18_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_15.owl time: 8301
+/home/ubuntu/d20/University13_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_14.owl time: 7588
+/home/ubuntu/d20/University3_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_18.owl time: 7044
+/home/ubuntu/d20/University6_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_5.owl time: 7228
+/home/ubuntu/d20/University9_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_18.owl time: 6889
+/home/ubuntu/d20/University14_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_14.owl time: 6366
+/home/ubuntu/d20/University17_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_19.owl time: 8421
+/home/ubuntu/d20/University1_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_6.owl time: 8363
+/home/ubuntu/d20/University12_22.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_22.owl time: 7347
+/home/ubuntu/d20/University19_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_7.owl time: 7930
+/home/ubuntu/d20/University1_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_17.owl time: 7179
+/home/ubuntu/d20/University16_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_1.owl time: 6812
+/home/ubuntu/d20/University11_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_2.owl time: 8837
+/home/ubuntu/d20/University2_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_6.owl time: 7492
+/home/ubuntu/d20/University1_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_18.owl time: 7087
+/home/ubuntu/d20/University4_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_16.owl time: 6064
+/home/ubuntu/d20/University9_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_5.owl time: 8848
+/home/ubuntu/d20/University5_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_3.owl time: 8077
+/home/ubuntu/d20/University15_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_0.owl time: 7085
+/home/ubuntu/d20/University2_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_9.owl time: 7640
+/home/ubuntu/d20/University10_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_13.owl time: 8091
+/home/ubuntu/d20/University13_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_9.owl time: 7470
+/home/ubuntu/d20/University7_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_10.owl time: 7137
+/home/ubuntu/d20/University11_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_5.owl time: 8024
+/home/ubuntu/d20/University17_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_12.owl time: 8935
+/home/ubuntu/d20/University6_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_12.owl time: 10143
+/home/ubuntu/d20/University6_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_18.owl time: 8196
+/home/ubuntu/d20/University3_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_9.owl time: 8307
+/home/ubuntu/d20/University8_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_8.owl time: 6870
+/home/ubuntu/d20/University4_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_18.owl time: 7060
+/home/ubuntu/d20/University2_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_2.owl time: 6666
+/home/ubuntu/d20/University16_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_11.owl time: 8590
+/home/ubuntu/d20/University12_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_3.owl time: 8665
+/home/ubuntu/d20/University16_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_12.owl time: 7479
+/home/ubuntu/d20/University15_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_14.owl time: 7686
+/home/ubuntu/d20/University9_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_2.owl time: 7384
+/home/ubuntu/d20/University14_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_4.owl time: 6403
+/home/ubuntu/d20/University7_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_11.owl time: 7095
+/home/ubuntu/d20/University7_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_1.owl time: 8965
+/home/ubuntu/d20/University3_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_17.owl time: 8753
+/home/ubuntu/d20/University12_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_5.owl time: 5928
+/home/ubuntu/d20/University18_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_0.owl time: 8418
+/home/ubuntu/d20/University8_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_10.owl time: 9174
+/home/ubuntu/d20/University0_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_10.owl time: 8010
+/home/ubuntu/d20/University10_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_9.owl time: 6941
+/home/ubuntu/d20/University18_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_17.owl time: 8247
+/home/ubuntu/d20/University12_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_17.owl time: 8069
+/home/ubuntu/d20/University17_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_2.owl time: 8500
+/home/ubuntu/d20/University19_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_6.owl time: 7467
+/home/ubuntu/d20/University8_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_17.owl time: 6961
+/home/ubuntu/d20/University15_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_19.owl time: 6520
+/home/ubuntu/d20/University0_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_9.owl time: 6473
+/home/ubuntu/d20/University4_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_11.owl time: 9284
+/home/ubuntu/d20/University17_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_20.owl time: 6873
+/home/ubuntu/d20/University7_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_3.owl time: 7755
+/home/ubuntu/d20/University13_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_6.owl time: 7155
+/home/ubuntu/d20/University6_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_3.owl time: 8035
+/home/ubuntu/d20/University9_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_17.owl time: 7362
+/home/ubuntu/d20/log.txt:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/log.txt time: 28
+/home/ubuntu/d20/University12_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_12.owl time: 6947
+/home/ubuntu/d20/University9_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_20.owl time: 8328
+/home/ubuntu/d20/University7_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_7.owl time: 7574
+/home/ubuntu/d20/University15_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_5.owl time: 8897
+/home/ubuntu/d20/University2_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_4.owl time: 8744
+/home/ubuntu/d20/University6_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_14.owl time: 5787
+/home/ubuntu/d20/University1_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_7.owl time: 9732
+/home/ubuntu/d20/University15_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_11.owl time: 8585
+/home/ubuntu/d20/University19_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_1.owl time: 7755
+/home/ubuntu/d20/University10_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_17.owl time: 7143
+/home/ubuntu/d20/University11_22.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_22.owl time: 8695
+/home/ubuntu/d20/University12_23.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_23.owl time: 9512
+/home/ubuntu/d20/University16_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_10.owl time: 9203
+/home/ubuntu/d20/University11_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_17.owl time: 6577
+/home/ubuntu/d20/University19_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_11.owl time: 9373
+/home/ubuntu/d20/University6_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_4.owl time: 8966
+/home/ubuntu/d20/University19_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_3.owl time: 7648
+/home/ubuntu/d20/University11_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_20.owl time: 7534
+/home/ubuntu/d20/University17_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_17.owl time: 8855
+/home/ubuntu/d20/University2_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_13.owl time: 8290
+/home/ubuntu/d20/University3_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_15.owl time: 6716
+/home/ubuntu/d20/University16_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_15.owl time: 7941
+/home/ubuntu/d20/University9_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_4.owl time: 6468
+/home/ubuntu/d20/University3_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_19.owl time: 7915
+/home/ubuntu/d20/University11_21.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_21.owl time: 8078
+/home/ubuntu/d20/University3_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_13.owl time: 7659
+/home/ubuntu/d20/University3_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_20.owl time: 7636
+/home/ubuntu/d20/University15_17.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_17.owl time: 8061
+/home/ubuntu/d20/University15_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_7.owl time: 7713
+/home/ubuntu/d20/University13_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_16.owl time: 6876
+/home/ubuntu/d20/University5_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_4.owl time: 6188
+/home/ubuntu/d20/University9_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_16.owl time: 8342
+/home/ubuntu/d20/University19_24.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_24.owl time: 7616
+/home/ubuntu/d20/University9_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_13.owl time: 8207
+/home/ubuntu/d20/University14_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_5.owl time: 7772
+/home/ubuntu/d20/University12_21.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_21.owl time: 7422
+/home/ubuntu/d20/University7_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_6.owl time: 8436
+/home/ubuntu/d20/University12_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_1.owl time: 7792
+/home/ubuntu/d20/University5_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_7.owl time: 7734
+/home/ubuntu/d20/University11_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_13.owl time: 7276
+/home/ubuntu/d20/University11_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_4.owl time: 7620
+/home/ubuntu/d20/University13_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_4.owl time: 6654
+/home/ubuntu/d20/University7_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_14.owl time: 7858
+/home/ubuntu/d20/University19_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_9.owl time: 7792
+/home/ubuntu/d20/University0_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_14.owl time: 6313
+/home/ubuntu/d20/University3_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_7.owl time: 9198
+/home/ubuntu/d20/University17_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_8.owl time: 7649
+/home/ubuntu/d20/University14_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_0.owl time: 8107
+/home/ubuntu/d20/University0_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_5.owl time: 7712
+/home/ubuntu/d20/University13_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_13.owl time: 6528
+/home/ubuntu/d20/University14_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_10.owl time: 6812
+/home/ubuntu/d20/University4_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_2.owl time: 7718
+/home/ubuntu/d20/University19_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_16.owl time: 7450
+/home/ubuntu/d20/University10_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_19.owl time: 6908
+/home/ubuntu/d20/University11_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_0.owl time: 7437
+/home/ubuntu/d20/University16_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_8.owl time: 8419
+/home/ubuntu/d20/University4_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_12.owl time: 7712
+/home/ubuntu/d20/University10_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_10.owl time: 6479
+/home/ubuntu/d20/University6_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_10.owl time: 6747
+/home/ubuntu/d20/University16_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_5.owl time: 8658
+/home/ubuntu/d20/University6_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_9.owl time: 8627
+/home/ubuntu/d20/University7_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_9.owl time: 7574
+/home/ubuntu/d20/University14_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_1.owl time: 8643
+/home/ubuntu/d20/University7_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_0.owl time: 7556
+/home/ubuntu/d20/University6_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_13.owl time: 8154
+/home/ubuntu/d20/University11_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_7.owl time: 8102
+/home/ubuntu/d20/University6_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_15.owl time: 6696
+/home/ubuntu/d20/University1_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_16.owl time: 8777
+/home/ubuntu/d20/University6_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_19.owl time: 8829
+/home/ubuntu/d20/University18_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_3.owl time: 9162
+/home/ubuntu/d20/University9_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_3.owl time: 7570
+/home/ubuntu/d20/University13_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_12.owl time: 7050
+/home/ubuntu/d20/University3_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_10.owl time: 6604
+/home/ubuntu/d20/University17_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_11.owl time: 6723
+/home/ubuntu/d20/University6_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_8.owl time: 6511
+/home/ubuntu/d20/University16_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_0.owl time: 7173
+/home/ubuntu/d20/University5_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_1.owl time: 9171
+/home/ubuntu/d20/University0_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_4.owl time: 7887
+/home/ubuntu/d20/University0_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_0.owl time: 9495
+/home/ubuntu/d20/University16_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_13.owl time: 8259
+/home/ubuntu/d20/University10_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_2.owl time: 8746
+/home/ubuntu/d20/University8_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_5.owl time: 12679
+/home/ubuntu/d20/University15_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_18.owl time: 8828
+/home/ubuntu/d20/University2_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_15.owl time: 5816
+/home/ubuntu/d20/University5_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_13.owl time: 7399
+/home/ubuntu/d20/University17_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_0.owl time: 7649
+/home/ubuntu/d20/University1_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_13.owl time: 8241
+/home/ubuntu/d20/University19_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_4.owl time: 7055
+/home/ubuntu/d20/University18_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_13.owl time: 6078
+/home/ubuntu/d20/University14_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_2.owl time: 7225
+/home/ubuntu/d20/University9_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_19.owl time: 7521
+/home/ubuntu/d20/University18_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_19.owl time: 7229
+/home/ubuntu/d20/University14_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_8.owl time: 7753
+/home/ubuntu/d20/University19_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_5.owl time: 6620
+/home/ubuntu/d20/University19_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_20.owl time: 7692
+/home/ubuntu/d20/University13_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_1.owl time: 7711
+/home/ubuntu/d20/University16_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_3.owl time: 8038
+/home/ubuntu/d20/University11_23.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_23.owl time: 5983
+/home/ubuntu/d20/University11_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_9.owl time: 6943
+/home/ubuntu/d20/University8_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_7.owl time: 8068
+/home/ubuntu/d20/University9_21.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_21.owl time: 7470
+/home/ubuntu/d20/University12_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_4.owl time: 6592
+/home/ubuntu/d20/University3_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_8.owl time: 8383
+/home/ubuntu/d20/University12_24.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_24.owl time: 7908
+/home/ubuntu/d20/University4_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_9.owl time: 8421
+/home/ubuntu/d20/University4_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_3.owl time: 6340
+/home/ubuntu/d20/University8_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_15.owl time: 7606
+/home/ubuntu/d20/University15_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_15.owl time: 9325
+/home/ubuntu/d20/University18_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_9.owl time: 6561
+/home/ubuntu/d20/University8_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_14.owl time: 8530
+/home/ubuntu/d20/University2_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_1.owl time: 8151
+/home/ubuntu/d20/University5_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_0.owl time: 6847
+/home/ubuntu/d20/University9_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_0.owl time: 8686
+/home/ubuntu/d20/University19_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_15.owl time: 8220
+/home/ubuntu/d20/University2_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_10.owl time: 6529
+/home/ubuntu/d20/University12_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_13.owl time: 7890
+/home/ubuntu/d20/University4_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_6.owl time: 8826
+/home/ubuntu/d20/University14_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_12.owl time: 8056
+/home/ubuntu/d20/University17_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_5.owl time: 7992
+/home/ubuntu/d20/University6_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_0.owl time: 7291
+/home/ubuntu/d20/University13_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University13_7.owl time: 6873
+/home/ubuntu/d20/University19_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_10.owl time: 6607
+/home/ubuntu/d20/University0_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_6.owl time: 6612
+/home/ubuntu/d20/University0_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_3.owl time: 7784
+/home/ubuntu/d20/University9_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_12.owl time: 8480
+/home/ubuntu/d20/University2_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_3.owl time: 7414
+/home/ubuntu/d20/University16_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_16.owl time: 6516
+/home/ubuntu/d20/University10_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_7.owl time: 9430
+/home/ubuntu/d20/University8_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_13.owl time: 7070
+/home/ubuntu/d20/University3_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_4.owl time: 8198
+/home/ubuntu/d20/University5_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_5.owl time: 6307
+/home/ubuntu/d20/University2_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_7.owl time: 7627
+/home/ubuntu/d20/University6_22.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_22.owl time: 9326
+/home/ubuntu/d20/University1_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_5.owl time: 8912
+/home/ubuntu/d20/University1_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_4.owl time: 6458
+/home/ubuntu/d20/University10_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_5.owl time: 7650
+/home/ubuntu/d20/University17_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_1.owl time: 9751
+/home/ubuntu/d20/University17_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_4.owl time: 7564
+/home/ubuntu/d20/University11_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_11.owl time: 6566
+/home/ubuntu/d20/University0_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University0_2.owl time: 7080
+/home/ubuntu/d20/University14_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_15.owl time: 7704
+/home/ubuntu/d20/University18_4.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_4.owl time: 7697
+/home/ubuntu/d20/University15_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University15_20.owl time: 10124
+/home/ubuntu/d20/University9_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_14.owl time: 6798
+/home/ubuntu/d20/University8_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_3.owl time: 8301
+/home/ubuntu/d20/University3_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_16.owl time: 8910
+/home/ubuntu/d20/University16_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_9.owl time: 7373
+/home/ubuntu/d20/University17_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University17_14.owl time: 8291
+/home/ubuntu/d20/University1_0.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_0.owl time: 6146
+/home/ubuntu/d20/University10_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_15.owl time: 6525
+/home/ubuntu/d20/University5_9.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_9.owl time: 8287
+/home/ubuntu/d20/University3_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University3_5.owl time: 7799
+/home/ubuntu/d20/University10_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_6.owl time: 8259
+/home/ubuntu/d20/University8_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_1.owl time: 9365
+/home/ubuntu/d20/University12_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_14.owl time: 7957
+/home/ubuntu/d20/University1_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University1_11.owl time: 5743
+/home/ubuntu/d20/University19_19.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_19.owl time: 7934
+/home/ubuntu/d20/University11_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University11_10.owl time: 7601
+/home/ubuntu/d20/University4_21.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University4_21.owl time: 6370
+/home/ubuntu/d20/University6_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_7.owl time: 10301
+/home/ubuntu/d20/University6_2.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_2.owl time: 7462
+/home/ubuntu/d20/University6_1.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_1.owl time: 8401
+/home/ubuntu/d20/University19_13.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University19_13.owl time: 7012
+/home/ubuntu/d20/University16_18.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University16_18.owl time: 7858
+/home/ubuntu/d20/University10_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_3.owl time: 5934
+/home/ubuntu/d20/University7_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_12.owl time: 8767
+/home/ubuntu/d20/University2_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University2_11.owl time: 8254
+/home/ubuntu/d20/University18_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_10.owl time: 9119
+/home/ubuntu/d20/University12_16.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University12_16.owl time: 9434
+/home/ubuntu/d20/University18_6.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_6.owl time: 7593
+/home/ubuntu/d20/University7_5.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University7_5.owl time: 8764
+/home/ubuntu/d20/University18_7.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_7.owl time: 8000
+/home/ubuntu/d20/University18_20.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_20.owl time: 7259
+/home/ubuntu/d20/University10_14.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University10_14.owl time: 7769
+/home/ubuntu/d20/University8_11.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University8_11.owl time: 8784
+/home/ubuntu/d20/University6_23.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University6_23.owl time: 7453
+/home/ubuntu/d20/University5_12.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University5_12.owl time: 8054
+/home/ubuntu/d20/University9_10.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_10.owl time: 7031
+/home/ubuntu/d20/University14_3.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University14_3.owl time: 6540
+/home/ubuntu/d20/University9_15.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University9_15.owl time: 6370
+/home/ubuntu/d20/University18_8.owl:<?xml version="1.0" encoding="UTF-8" standalone="yes"?><result><success>true</success></result>
+/home/ubuntu/d20/University18_8.owl time: 8615
+
+
+Finished loading TURBULENCE_20  3125 seconds
+
+        TURBULENCE_20   3125 seconds
+
+real    52m8.035s
+user    0m8.060s
+sys     0m1.530s
