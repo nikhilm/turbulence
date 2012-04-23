@@ -53,7 +53,7 @@ public class StoreDataAction implements Action, ARPEventHandler, ErrorHandler {
         rdfParser.getHandlers().setExtendedHandler(this);
         rdfParser.getHandlers().setNamespaceHandler(this);
         rdfParser.getHandlers().setStatementHandler(this);
-        //rdfParser.getOptions().setLaxErrorMode();
+        rdfParser.getOptions().setLaxErrorMode();
 
         conceptsTemplate = TurbulenceDriver.getConceptsTemplate();
         instanceDataTemplate = TurbulenceDriver.getInstanceDataTemplate();
@@ -86,6 +86,7 @@ public class StoreDataAction implements Action, ARPEventHandler, ErrorHandler {
     }
     public void fatalError(SAXParseException exception) {
         logger.warn("FE");
+        exception.printStackTrace();
     }
     public void warning(SAXParseException exception) {
         logger.warn("W");

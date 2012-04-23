@@ -3,6 +3,7 @@ package com.turbulence.core.actions;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,6 +18,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.ws.rs.core.StreamingOutput;
+
+import javax.ws.rs.WebApplicationException;
 
 import org.apache.commons.collections.IteratorUtils;
 
@@ -384,7 +389,7 @@ public class StoreXMLDataAction implements Action {
                 for (Node srcClazz : trav.traverse(n).nodes()) {
                     for (Node destClazz : trav.traverse(cn).nodes()) {
                         Path path = pf.findSinglePath(srcClazz, destClazz);
-                        if (path != null) {
+                        if (path != null && path.lastRelationship() != null) {
                             // FIXME we probably want to do scoring, but for now
                             // choose the first one
                             rel = (String) path.lastRelationship().getProperty("IRI");
@@ -414,9 +419,7 @@ public class StoreXMLDataAction implements Action {
         needResolution.add(trip);
     }
 
-    public Result perform() {
-        Result r = new Result();
-
+    public StreamingOutput stream() {
         conceptIndex = TurbulenceDriver.getClusterSpace().index().forNodes("conceptIndex");
         needResolution = new LinkedList<MyTriple>();
         typePropInstances = new HashMap<String, Map<String, Resource>>();
@@ -430,9 +433,9 @@ public class StoreXMLDataAction implements Action {
             }
 
             for (Map.Entry<String, Map<String, Resource>> entry : typePropInstances.entrySet()) {
-                logger.warn(entry.getKey());
+                //logger.warn(entry.getKey());
                 for (Map.Entry<String, Resource> subEntry : entry.getValue().entrySet()) {
-                    logger.warn("    " + subEntry.getKey() + ": " + subEntry.getValue());
+                    //logger.warn("    " + subEntry.getKey() + ": " + subEntry.getValue());
                 }
             }
 
@@ -441,18 +444,29 @@ public class StoreXMLDataAction implements Action {
                 if (s != null)
                     model.add(s);
             }
-            r.success = true;
         } catch (JDOMException e) {
-            r.success = false;
-            r.error = TurbulenceError.BAD_XML_DATA;
-            r.message = e.getMessage();
+            e.printStackTrace();
+            return new StreamingOutput() {
+                public void write(OutputStream out) throws IOException, WebApplicationException {
+                    out.write("Error!".getBytes());
+                }
+            };
         } catch (IOException e) {
-            r.success = false;
-            r.error = TurbulenceError.IO_ERROR;
-            r.message = e.getMessage();
+            return new StreamingOutput() {
+                public void write(OutputStream out) throws IOException, WebApplicationException {
+                    out.write("IOError!".getBytes());
+                }
+            };
         }
 
-        model.write(System.out, "RDF/XML-ABBREV");
-        return r;
+        return new StreamingOutput() {
+            public void write(OutputStream out) throws IOException, WebApplicationException {
+                model.write(out, "RDF/XML-ABBREV");
+            }
+        };
+    }
+
+    public Result perform() {
+        throw new UnsupportedOperationException();
     }
 }

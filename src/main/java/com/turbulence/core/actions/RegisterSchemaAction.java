@@ -85,6 +85,7 @@ public class RegisterSchemaAction implements Action {
     }
 
     private Result handleOWLOntology(final IRI iri) throws OWLOntologyCreationException {
+        long _tts = System.currentTimeMillis();
         OWLOntology ont = ontologyManager.loadOntology(iri);
         if (ontologyMapper.getDocumentIRI(iri) == null)
             TurbulenceDriver.submit(new OntologySaver(iri, ont, TurbulenceDriver.getOntologyStoreDirectory()));
@@ -165,8 +166,7 @@ public class RegisterSchemaAction implements Action {
                 tx.finish();
             }
         }
-        logger.warn("Class heirarchy took: " + (System.currentTimeMillis() - t)/1000.0 + " seconds");
-        logger.warn("Roots: " + getRoots().size());
+        long _ct = System.currentTimeMillis() - t;
 
         for (OWLAxiom c : ont.getAxioms(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
             OWLObjectPropertyDomainAxiom ax = (OWLObjectPropertyDomainAxiom) c;
@@ -244,6 +244,9 @@ public class RegisterSchemaAction implements Action {
         Result r = new Result();
         r.success = true;
         r.message = "yeayayay";
+        r.tt = System.currentTimeMillis() - _tts;
+        r.roots = getRoots().size();
+        r.ct = _ct;
         return r;
     }
 

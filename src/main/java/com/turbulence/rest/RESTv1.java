@@ -62,9 +62,9 @@ public class RESTv1 {
     @Path("/store_xml_data")
     @Consumes("application/xml")
     @Produces("application/xml")
-    public Result storeXMLData(final InputStream in) {
+    public StreamingOutput storeXMLData(final InputStream in) {
         final StoreXMLDataAction act = ActionFactory.createStoreXMLDataAction(in);
-        return execute(act);
+        return act.stream();
     }
 
     @POST
