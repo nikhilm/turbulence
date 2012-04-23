@@ -1,4 +1,7 @@
 \documentclass{sig-alternate}
+\usepackage[]{hyperref}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 \begin{document}
     \title{Turbulence: An augmented, distributed triple-store}
     \numberofauthors{2}
@@ -34,6 +37,49 @@
     Some text \cite{Harth07yars2:a}
 
     Hi there \cite{Chang06bigtable:a}
+
+    \section{Clusterspace formation}
+
+    \begin{algorithm}
+        \caption{Register-Schema}
+        \label{csf}
+        \begin{algorithmic}
+            \REQUIRE $CS$ is the existing clusterspace
+            \REQUIRE $O$ is the new OWL ontology
+            \ENSURE $O$ is a part of $CS$
+
+            \IF{$O$ is already registered in $CS$}
+                \RETURN Already registered
+            \ENDIF
+
+            \FORALL{ontology $IMPO$ imported by $O$}
+                \STATE Register-Schema($IMPO$)
+            \ENDFOR
+
+            \STATE $ontNode \leftarrow$ a new CS node for $O$
+            \STATE Add-Edge($ontNode$, $referenceNode$, $KNOWN\_ONTOLOGY$)
+
+            \FORALL{$C$ such that $C$ is a Class defined in $O$}
+                \STATE $CNODE \leftarrow$ new CS node for $C$
+                \STATE Insert $CNODE$ in the CS Class reference hashtable
+                \STATE Add-Edge($CNODE$, $ontNode$, $SOURCE\_ONTOLOGY$)
+                \STATE Link-Class($C$, $CNODE$)
+            \ENDFOR
+
+            \FORALL{$OP$ such that $OP$ is an ObjectProperty defined in $O$}
+                \STATE $OPNODE \leftarrow$ new CS node for $OP$
+                \STATE Add-Edge($OPNODE$, $ontNode$, $SOURCE\_ONTOLOGY$)
+                \STATE Link-ObjectProperty($OP$, $OPNODE$)
+            \ENDFOR
+
+            \FORALL{$DP$ such that $DP$ is an DataProperty defined in $O$}
+                \STATE $DPNODE \leftarrow$ new CS node for $DP$
+                \STATE Add-Edge($DPNODE$, $ontNode$, $SOURCE\_ONTOLOGY$)
+                \STATE Link-DataProperty($DP$, $DPNODE$)
+            \ENDFOR
+
+        \end{algorithmic}
+    \end{algorithm}
 
     \section{Future Directions}
 

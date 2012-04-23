@@ -19,6 +19,7 @@
 \documentclass[conference]{IEEEtran}
 
 \usepackage{cite, graphicx, subfigure, amsmath, algpseudocode, float} 
+\usepackage[bookmarks=true,colorlinks=false,pdfborder={0 0 0}]{hyperref}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \interdisplaylinepenalty=2500
@@ -35,7 +36,7 @@
 \begin{document}
 %
 % paper title
-\title{A Database for Semantic Data Mining}
+\title{Semantic mapping of XML metadata on the Cloud}
 %
 % author names and IEEE memberships
 \author{\IEEEauthorblockN{Nikhil Marathe}
@@ -52,8 +53,11 @@
 \maketitle
 
 \begin{abstract}
-    We propose a system for conversion, storage and querying of semi-structured
-    XML data from heterogenous services into structured, semantic data.
+    We propose a system for conversion of XML data from heterogenous services
+    into structured data with semantic information and its storage in
+    a distributed manner. The system implements a triplestore over
+    a distributed key-value store using a unique graph mapping of ontologies to
+    allow fast retrieval.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -83,8 +87,8 @@ This paper makes the following contributions:
     \item Provides an attempt at translating XML data to structured RDF data.
     \item Presents a conversion of ontology data to a cached 'Clusterspace' to
         allow fast, distributed reads.
-    \item Storage of RDF data over a distributed key-value store in a manner
-        suitable for data-mining.
+    \item Storage of RDF data over a distributed key-value store and the
+        problem that occurs in real implementation.
 \end{itemize}
 
 \section{Background}
@@ -94,22 +98,23 @@ This paper makes the following contributions:
 TODO: diff between XML and RDF
 
 \section{System}
-Our system has the following core modules:
+Our system has the following core modules (see Figure \ref{fig:architecture}):
 
 \begin{itemize}
     \item \emph{Clusterspace} - A graph of the various concepts spanning all
-        known ontologies implemented over Neo4j\footnote{http://neo4j.org}.
+        known ontologies.
     \item \emph{Triple store} - An RDF triple store implemented over Apache
         Cassandra\footnote{http://cassandra.apache.org}.
     \item \emph{XML to RDF converter} - Attempts to generate a set of RDF
         triples from semantic information extracted from XML data.
 \end{itemize}
 
-In addition, OWL API\cite{Hor:09} has been used for ontology processing,
-Pellet\cite{Parsia04pellet:an} as the reasoner and Apache
-Jena\footnote{http://incubator.apache.org/jena/} to process RDF and SPARQL.
-
-TODO: insert diagram of system
+\begin{figure*}
+    \centering
+    \includegraphics[scale=0.5]{images/architecture}
+    \caption{System architecture}
+    \label{fig:architecture}
+\end{figure*}
 
 \emph{Publishers} feed data to the system via XML or RDF. The Clusterspace is
 built up as and when new ontologies are introduced to the system. Information
@@ -161,7 +166,11 @@ ontology can be augmented with entailment. For example, the query:
 
 \begin{verbatim}
 PREFIX db: <http://dbpedia.org/ontology/>
-SELECT ?p WHERE { ?b a db:Book. ?p a db:Person. ?b db:author ?p }]
+SELECT ?p WHERE {
+    ?b a db:Book .
+    ?p a db:Person .
+    ?b db:author ?p .
+}
 \end{verbatim}
 
 over \ref{fig:person-cs-example}, will return books written by actors as well
@@ -302,288 +311,365 @@ our system.
 
 TODO: graphic of columnfamilies
 
-\begin{figure}
-    \caption{Clusterspace formation}
-    \label{cs-algo}
-    \begin{algorithmic}
-        \Function{Add-To-Clusterspace}{ontology}
-            \Require $ontology$ is the ontology to be added
-            \If{$ontology$ is already in the clusterspace}
-                \State \Return
-            \EndIf
-
-            \ForAll{ontologies imported by $ontology$}
-                \State \Call{Add-To-Clusterspace}{$ontology$}
-            \EndFor
-
-            \ForAll{classes declared in $ontology$}
-                \State \Call{Link-Class}{$class$}
-            \EndFor
-
-            \ForAll{object properties defined in $ontology$}
-                \State \Call{Link-Object-Property}{$property$}
-                \If{$property$ has no domain}
-                    \ForAll{$(root, range)$ over $(roots, range of property)$}
-                        \State \Call{Add-Edge}{$root$,$range$}
-                    \EndFor
-                \EndIf
-                \ForAll{pairs $(domain,range)$ over which $property$ is defined}
-                    \State \Call{Add-Edge}{$domain,range,property$}
-                \EndFor
-            \EndFor
-
-            \ForAll{data properties defined in $ontology$}
-                \If{$property$ has no domain}
-                    \State \Call{Add-Edge}{$root$,xsd:string} for all roots
-                \Else
-                    \State \Call{Add-Edge}{$domain$,xsd:string} for all domains
-                \EndIf
-            \EndFor
-        \EndFunction
-    \end{algorithmic}
-\end{figure}
-
-\begin{figure}
-    \caption{Link class into Clusterspace}
-    \label{cs-link-class}
-    \begin{algorithmic}
-        \Function{Link-Class}{$c$}
-            \Require c is a previously unknown class
-            \State $n\gets $ a unique node representing $c$ in the clusterspace
-            \State $queue\gets $ a queue initially containing the roots of the clusterspace
-            \State $linked\gets False$
-            \While{not $linked$ and $queue$ is not empty}
-            \State $x\gets \Call{dequeue}{queue}$
-                \State $linked\gets \Call{Compare-Classes}{n,x}$
-                \If{not $linked$}
-                    \State Enqueue children of x
-                \Else
-                    exit loop
-                \EndIf
-            \EndWhile
-
-            \If{not $linked$}
-                \State insert $n$ as a root
-            \EndIf
-        \EndFunction
-    \end{algorithmic}
-\end{figure}
-
-\begin{figure}
-    \caption{Insert class into clusterspace at right spot}
-    \label{cs-compare-classes}
-    \begin{algorithmic}
-        \Function{Compare-Classes}{$n$,$x$}
-            \State $nClass\gets$ OWL class for Node $n$
-            \State $xClass\gets$ OWL class for Node $x$
-            
-            \If{$nClass$ has $xClass$ as equivalent class}
-                \State \Call{Add-Edge}{$n$,$x$} of type $EQUIVALENT$
-                \State \Return True
-            \ElsIf{$xClass$ is a superclass of $nClass$}
-                \For{$subclass\gets$ each child node of $x$}
-                    \If{$nClass$ has $subclass$ as equivalent class}
-                        \State \Call{Add-Edge}{$n$,$subclass$} of type $EQUIVALENT$
-                        \State \Return True
-                    \ElsIf{$subclass$ is a subclass of $nClass$}
-                        \State \Call{Remove-Edge}{$subclass$, $xClass$}
-                        \State \Call{Add-Edge}{$subclass$, $nClass$}
-                    \EndIf
-                \EndFor
-
-                \State \Call{Add-Edge}{$nClass$, $xClass$}
-
-                \For{$sibling\gets$ each sibling of $x$}
-                    \If{$siblingClass$ is a superclass of $nClass$ in the ontology}
-                        \State \Call{Compare-Classes}{$n$, $sibling$}
-                    \EndIf
-                \EndFor
-            \ElsIf{$xClass$ is a subclass of $nClass$}
-                \State \Call{Add-Edge}{$x$, $n$}
-
-                \For{$sibling\gets$ each sibling of $x$}
-                    \If{$siblingClass$ is a superclass of $nClass$ in the ontology}
-                        \State \Call{Add-Edge}{$sibling$, $n$}
-                        \If{\Call{Is-Root}{$sibling$}}
-                            \State \Call{Remove-Root}{$sibling$}
-                            \State \Call{Add-Root}{$n$}
-                        \EndIf
-                    \EndIf
-                \EndFor
-
-                \If{\Call{Is-Root}{$x$}}
-                    \State \Call{Remove-Root}{$x$}
-                    \State \Call{Add-Root}{$n$}
-                \EndIf
-
-                \State \Return False
-            \EndIf
-
-            \State \Return False
-        \EndFunction
-    \end{algorithmic}
-\end{figure}
-
-\begin{figure*}
-    \caption{XML to RDF conversion}
-    \label{xml-to-rdf-algo}
-    \begin{algorithmic}
-        \Function{Convert}{$xml$}
-            \Require $xml$ is a well formatted XML document
-            \Ensure A set of valid RDF triples is emitted
-
-            \State $unresolved\gets empty list$
-            \State $typePropInstances\gets$ map from $(String, String) \rightarrow resource$
-
-            \For{$element \gets$ children of root of $xml$}
-                \State \Call{ToRDF}{$element$}
-            \EndFor
-
-            \For{$triple$ in $unresolved$}
-                \State $resolved \gets$ \Call{Resolve}{$triple$}
-                \State \Call{Emit}{$resolved$} if valid
-            \EndFor
-        \EndFunction
-
-        \Function{Resolve}{$triple$}
-            \Require $triple$ is $(subject, predicate, object)$
-            \If{$object$ is a resource}
-                \State \Return $(subject, predicate, object)$
-            \ElsIf{$object$ is a Lookup}
-                \State $type\gets object.type$
-                \State $val\gets object.value$
-                \If{\Call{Contains}{$typePropInstances$,$(type, val)$}}
-                    \State \Return $(subject, predicate, typePropInstances[type,val])$
-                \EndIf
-                \State \Return $()$
-            \EndIf
-        \EndFunction
-    \end{algorithmic}
-\end{figure*}
-
-\begin{figure*}
-    \caption{Single element to RDF}
-    \label{to-rdf-algo}
-    \begin{algorithmic}
-        \Function{ToRDF}{$element$}
-            \State $node\gets$ Clusterspace node having class name $element$
-            \If{$element$ has no attributes and no child elements}
-                \State \Return \Call{Lookup}{$node$, $elementText$}
-            \EndIf
-
-            \State $subject\gets$ empty resource
-            \State \Call{Emit}{$subject$, ``type'', $node$}
-
-            \ForAll{attributes of $element$}
-                \If{$attribute$ is a datatype property of $node$}
-                    \State \Call{Emit}{$subject$, $property$, $attributeValue$}
-                    \State \Call{Add}{$typePropInstances$, $(node,attributeValue)\rightarrow subject$}
-                \EndIf
-            \EndFor
-
-            \ForAll{children of $element$}
-                \If{$child$ has no children}
-                    \If{$child$ is a datatype property}
-                        \State \Call{Emit}{$subject$, $property$, $childText$}
-                        \State \Call{Add}{$typePropInstances$, $(node,childText)\rightarrow subject$}
-                    \ElsIf{$child$ is an object property}
-                        \State $range\gets$ range of object property
-                        \State Add $(subject,property,\Call{Lookup}{range,childText})$ to $unresolved$
-                    \EndIf
-                    \State Continue
-                \EndIf
-
-                \If{$child$ is an object property}
-                    \ForAll{sub-children of $child$}
-                        \State $val\gets$ \Call{ToRDF}{$subchild$}
-                        \If{$val$ can be resolved to resource}
-                            \State $valResource\gets$ \Call{Resolve}{$val$}
-                            \State \Call{Emit}{$subject$, $property$, $valResource$}
-                        \Else
-                            \State Add $(subject,property,val)$ to $unresolved$
-                        \EndIf
-                    \EndFor
-                    \State Continue
-                \EndIf
-
-                \If{$child$ is a class}
-                    \State $property\gets$ a possible property $n\rightarrow child$
-                    \State $object\gets$ \Call{ToRDF}{$child$}
-                    \State Add $(subject,property,object)$ to $unresolved$
-                \EndIf
-            \EndFor
-
-            \State \Return $subject$
-        \EndFunction
-    \end{algorithmic}
-\end{figure*}
-
 \section{Evaluation}
+
+The implementation of the system was done in Java and run on JVM version 1.6. The main
+process was run with a maximum heap size of 2G and a start heap size of 1G.
+
+The actual implementation uses the following libraries:
+\begin{enumerate}
+    \item Neo4j\footnote{http://neo4j.org} for the Clusterspace.
+    \item Apache Cassandra\footnote{http://cassandra.apache.org} for the data storage.
+    \item OWLAPI\cite{Hor:09} for handling ontologies.
+    \item Apache Jena\footnote{http://incubator.apache.org/jena/} for SPARQL and RDF parsing.
+    \item JDOM\footnote{http://jdom.org} for XML parsing.
+    \item Pellet\cite{Parsia04pellet:an} as the DL-reasoner.
+\end{enumerate}
 
 We performed performance evaluations for our system in four parts.
 
 For all tests, the hardware was a 2011 Macbook Pro with Snow Leopard 10.6.8,
-2.3GHz Intel Core i7, 8GB RAM, and a 7200rpm Hard Drive.
-JVM 1.6.0 was used. The start heap size for the system was 1G, for Cassandra it
-was 400M. Max heap size for the system was 2G, for Cassandra it was 4G.
+2.3GHz Intel Core i7, 8GB RAM, and a 7200rpm Hard Drive.  JVM 1.6.0 was used.
+  The start heap size for the system was 1G, for Cassandra it was 400M. Max
+  heap size for the system was 2G, for Cassandra it was 4G.
+
+For the distributed Cassandra test a cluster of 4 nodes on Amazon
+EC2\footnote{TODO} was used.  Each machine had 8GB of RAM, out of which
+Cassandra was allocated 4GB. One of the nodes ran our system. TODO processors on each?
++ OS.
+
+The dataset used for the data loading and queries was generated by the LUBM \texttt{ubt} generator tool. LUBM provides 14 queries to measure the performance of a system. Queries 11, 12 and 13 are not applicable to the system as it does not perform full RDFS entailment yet. Queries 2, 7 and 9 would either timeout or the Jena SPARQL processor would run out of memory and halt, hence these queries have not been performed.
 
 \subsection{Loading an ontology in the clusterspace}
+
+\subsubsection{Time for class heirarchy formation}
 
 The DBpedia ontology v3.6 has 272 classes, 629 object properties and 706
 datatype properties. One of the key measures is the time taken to build the
 class heirarchy. Therefore we ran runs with modified DBpedia ontologies to have
-10 to 272 classes. Each test was run 10 times and then averaged. The number of
-properties was kept at maximum and the time required to build the property
-heirarchy is not measured as it is the same algorithm as for the class
-heirarchy. Figure \ref{fig:eval:cs-form} show the test results. Adding edges
-between properties is an almost constant time operation for every
-$(domain,range)$ pair as the known classes are stored in a hash. If the
-domain is anonymous, all the roots get an edge. This is responsible for the
-sudden decrease in over all running time on the DBpedia ontology for 272
-classes. As the number of roots increase (see table \ref{tbl:cs-form-time}),
-the extra cost of adding properties to each of them causes a corresponding
-increase in times. But when all classes have been loaded, each
-$(domain,range)$ pair is constant time accessible, leading to a drop in
-times.
+10 to 272 classes, randomly picked. 10 versions of each ontology was generated
+and the time averaged. Each test itself was also run 10 times. The first
+result was excluded since to allow for the data to be loaded into RAM and
+then averaged.
 
-\begin{table}
-    \caption{Clusterspace formation test cases}
-    \label{tbl:cs-form-time}
-    \begin{center}
-        \begin{tabular}{ r r }
-            \hline
-            Classes & Roots\\
-            10 & 5\\
-            50 & 12\\
-            100 & 17\\
-            180 & 24\\
-            272 & 21\\
-            \hline
-        \end{tabular}
-    \end{center}
-\end{table}
+Figure \ref{fig:eval:cs-ch-form} shows the results. As is seen, addition is
+nearly linear time with the tree traversals (see Section
+\ref{cs-compare-classes}) accounting for an approximately logarithmic factor.
 
-\begin{figure*}
+\begin{figure}[h]
     \centering
-    \includegraphics[scale=0.5]{../../graphs/full-register/register}
-    \caption{Clusterspace formation time with DBpedia ontology}
-    \label{fig:eval:cs-form}
-\end{figure*}
+    \includegraphics[scale=0.35]{../../graphs/full-register-random/register-classes.png}
+    \caption{Class heirarchy formation time}
+    \label{fig:eval:cs-ch-form}
+\end{figure}
 
-\begin{figure*}
+\subsection{XML to RDF conversion time}
+
+To measure the time taken for XML to RDF conversion, a sample RDF file
+generated using the LUBM data generator was used. It had 20659 class instances
+and 82415 property instances. A tool which read RDF and generated random XML structures
+was used to generate 10 versions of the RDF file. Each XML file was run through the converter 10 times. The test results are in Figure %\ref{fig:eval:xml2rdf} TODO: needs for different number of RDF triples :(
+
+\subsection{Query clusterspace time}
+
+For query processing, there are two measurements. One is the time spent traversing the clusterspace, and the other is time spent fetching data from Cassandra. The clusterspace is located only on one machine. Times measured are for the LUBM sample queries run on test data with 129533 class instances and 516116 property instances over the LUBM University Bench Ontology. Figure \ref{fig:eval:qcs} shows the time for Clusterspace traversal.
+
+As is seen, clusterspace operations are quite fast. The main improvement over a reasoner is that for every query of every client, the reasoner may have to re-parse various ontologies and make inferences. More importantly, in a distributed system, each machine will have to run its own reasoner on its own set of ontologies. By having a shared Clusterspace, changes in data and inferences can be reflected across all machines without much of a performance hit. For simple queries in particular, the Clusterspace shows sub 10 millisecond times.
+
+\begin{figure}[h]
     \centering
-    \includegraphics[scale=0.5]{../../graphs/full-query/qm}
+    \includegraphics[scale=0.35]{../../graphs/full-query/qm}
     \caption{Query retrieval Clusterspace traversal time}
     \label{fig:eval:qcs}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}
+\subsection{Query retrieval time}
+
+\subsubsection{Cassandra on a single node}
+
+TODO
+
+\begin{figure*}[t]
     \centering
-    \includegraphics[scale=0.5]{../../graphs/full-query/qr}
-    \caption{Query retrieval total time}
+    \mbox{
+        \subfigure{
+            \includegraphics[scale=0.35]{../../graphs/full-query/qr}
+        }
+        \quad
+        \subfigure{
+            \includegraphics[scale=0.35]{../../graphs/cluster-query/qr.png}
+        }
+    }
+    \caption{Query retrieval total time - a) Single node b) Cluster }
     \label{fig:eval:qtotal}
 \end{figure*}
 
+\subsubsection{Cassandra on a 4 node cluster}
+
+inference that cassandra is a bad idea for speed, move computation to the data and all.
+
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[scale=0.35]{../../graphs/full-register/register}
+%    \caption{Clusterspace formation time}
+%    \label{fig:eval:cs-form}
+%\end{figure}
+%
+%\subsubsection{Total time for Clusterspace formation}
+%To measure the total time, the same DBpedia ontology was used. Figure
+%\ref{fig:eval:cs-form} show the test results. Adding edges between properties
+%is an almost constant time operation for every $(domain,range)$ pair as the
+%known classes are stored in a hash. If the domain is anonymous, all the roots
+%get an edge. This is responsible for the sudden decrease in over all running
+%time on the DBpedia ontology for 272 classes. As the number of roots increase
+%(see table \ref{tbl:cs-form-time}), the extra cost of adding properties to each
+%of them causes a corresponding increase in times. But when all classes have
+%been loaded, each $(domain,range)$ pair is constant time accessible, leading to
+%a drop in times.
+%
+% The number of
+%properties was kept at maximum and the time required to build the property
+%heirarchy is not measured as it is the same algorithm as for the class
+%heirarchy.
+%
+%\begin{table}
+%    \caption{Clusterspace formation test cases}
+%    \label{tbl:cs-form-time}
+%    \begin{center}
+%        \begin{tabular}{ r r }
+%            \hline
+%            Classes & Roots\\
+%            10 & 5\\
+%            50 & 12\\
+%            100 & 17\\
+%            180 & 24\\
+%            272 & 21\\
+%            \hline
+%        \end{tabular}
+%    \end{center}
+%\end{table}
+
+\section{Conclusion and future work}
+We have shown that a basic attempt at conversion of XML also performs relatively well under certain constraints. The Clusterspace approach has been shown to allow high-availability caching of inferences obtained from an OWL reasoner, allowing multiple instances of the system's query interface to serve a number of clients simultaneously. Cassandra performs well as a triple-store for large volumes of data but relatively simple queries, which is usually the case for purposes of machine learning or statistical analysis. The extra information returned by our system makes it easy for mining tools to extract data, rather than create multiple queries. It should be noted that the implementation of our system was a proof of concept and is unoptimized. Especially in the case of Cassandra, significant gains can be achieved by buffering data better.
+
+There are significant improvements that can be done to this system, to create a deployable, high-performance product, particularly:
+
+\begin{enumerate}
+    \item Using statistical information in conversion of XML to RDF. This can include tolerating typos, inferencing possible ontologies based on the sub-tags and so on.
+    \item Using MapReduce over Cassandra for triple retrieval - Currently query resolution is done only on one machine, making it a bottleneck. Query resolution is a massively parallel task and applying MapReduce\cite{Dean04mapreduce:simplified}\cite{hus09hadoop} would yield substantial improvements. TODO: cite the berlin benchmark jena vs others result
+    \item Real-time processing - Miners could register queries with the system and as data was submitted by publishers in real-time, the system could match the queries and notify the miners of new data satisfying the queries\cite{Aba03aurora}.
+\end{enumerate}
+
+\pagebreak
+\appendix
+\section{Algorithms}
+This Appendix contains the pseudocode for all the algorithms discussed in the paper.
+
+\subsection{Clusterspace formation}
+\label{cs-algo}
+\begin{algorithmic}
+    \Function{Add-To-Clusterspace}{ontology}
+        \Require $ontology$ is the ontology to be added
+        \If{$ontology$ is already in the clusterspace}
+            \State \Return
+        \EndIf
+
+        \ForAll{ontologies imported by $ontology$}
+            \State \Call{Add-To-Clusterspace}{$ontology$}
+        \EndFor
+
+        \ForAll{classes declared in $ontology$}
+            \State \Call{Link-Class}{$class$}
+        \EndFor
+
+        \ForAll{object properties defined in $ontology$}
+            \State \Call{Link-Object-Property}{$property$}
+            \If{$property$ has no domain}
+                \ForAll{$(root, range)$ over $(roots, range of property)$}
+                    \State \Call{Add-Edge}{$root$,$range$}
+                \EndFor
+            \EndIf
+            \ForAll{pairs $(domain,range)$ over which $property$ is defined}
+                \State \Call{Add-Edge}{$domain,range,property$}
+            \EndFor
+        \EndFor
+
+        \ForAll{data properties defined in $ontology$}
+            \If{$property$ has no domain}
+                \State \Call{Add-Edge}{$root$,xsd:string} for all roots
+            \Else
+                \State \Call{Add-Edge}{$domain$,xsd:string} for all domains
+            \EndIf
+        \EndFor
+    \EndFunction
+\end{algorithmic}
+
+\subsection{Link class into Clusterspace}
+\label{cs-link-class}
+\begin{algorithmic}
+    \Function{Link-Class}{$c$}
+        \Require c is a previously unknown class
+        \State $n\gets $ a unique node representing $c$ in the clusterspace
+        \State $queue\gets $ a queue initially containing the roots of the clusterspace
+        \State $linked\gets False$
+        \While{not $linked$ and $queue$ is not empty}
+        \State $x\gets \Call{dequeue}{queue}$
+            \State $linked\gets \Call{Compare-Classes}{n,x}$
+            \If{not $linked$}
+                \State Enqueue children of x
+            \Else
+                exit loop
+            \EndIf
+        \EndWhile
+
+        \If{not $linked$}
+            \State insert $n$ as a root
+        \EndIf
+    \EndFunction
+\end{algorithmic}
+
+\subsection{Insert class into clusterspace at right spot}
+\label{cs-compare-classes}
+\begin{algorithmic}
+    \Function{Compare-Classes}{$n$,$x$}
+        \State $nClass\gets$ OWL class for Node $n$
+        \State $xClass\gets$ OWL class for Node $x$
+
+        \If{$nClass$ has $xClass$ as equivalent class}
+            \State \Call{Add-Edge}{$n$,$x$} of type $EQUIVALENT$
+            \State \Return True
+        \ElsIf{$xClass$ is a superclass of $nClass$}
+            \For{$subclass\gets$ each child node of $x$}
+                \If{$nClass$ has $subclass$ as equivalent class}
+                    \State \Call{Add-Edge}{$n$,$subclass$} of type $EQUIVALENT$
+                    \State \Return True
+                \ElsIf{$subclass$ is a subclass of $nClass$}
+                    \State \Call{Remove-Edge}{$subclass$, $xClass$}
+                    \State \Call{Add-Edge}{$subclass$, $nClass$}
+                \EndIf
+            \EndFor
+
+            \State \Call{Add-Edge}{$nClass$, $xClass$}
+
+            \For{$sibling\gets$ each sibling of $x$}
+                \If{$siblingClass$ is a superclass of $nClass$ in the ontology}
+                    \State \Call{Compare-Classes}{$n$, $sibling$}
+                \EndIf
+            \EndFor
+        \ElsIf{$xClass$ is a subclass of $nClass$}
+            \State \Call{Add-Edge}{$x$, $n$}
+
+            \For{$sibling\gets$ each sibling of $x$}
+                \If{$siblingClass$ is a superclass of $nClass$ in the ontology}
+                    \State \Call{Add-Edge}{$sibling$, $n$}
+                    \If{\Call{Is-Root}{$sibling$}}
+                        \State \Call{Remove-Root}{$sibling$}
+                        \State \Call{Add-Root}{$n$}
+                    \EndIf
+                \EndIf
+            \EndFor
+
+            \If{\Call{Is-Root}{$x$}}
+                \State \Call{Remove-Root}{$x$}
+                \State \Call{Add-Root}{$n$}
+            \EndIf
+
+            \State \Return False
+        \EndIf
+
+        \State \Return False
+    \EndFunction
+\end{algorithmic}
+
+\subsection{XML to RDF conversion}
+\label{xml-to-rdf-algo}
+\begin{algorithmic}
+    \Function{Convert}{$xml$}
+        \Require $xml$ is a well formatted XML document
+        \Ensure A set of valid RDF triples is emitted
+
+        \State $unresolved\gets empty list$
+        \State $typePropInstances\gets$ map from $(String, String) \rightarrow resource$
+
+        \For{$element \gets$ children of root of $xml$}
+            \State \Call{ToRDF}{$element$}
+        \EndFor
+
+        \For{$triple$ in $unresolved$}
+            \State $resolved \gets$ \Call{Resolve}{$triple$}
+            \State \Call{Emit}{$resolved$} if valid
+        \EndFor
+    \EndFunction
+
+    \Function{Resolve}{$triple$}
+        \Require $triple$ is $(subject, predicate, object)$
+        \If{$object$ is a resource}
+            \State \Return $(subject, predicate, object)$
+        \ElsIf{$object$ is a Lookup}
+            \State $type\gets object.type$
+            \State $val\gets object.value$
+            \If{\Call{Contains}{$typePropInstances$,$(type, val)$}}
+                \State \Return $(subject, predicate, typePropInstances[type,val])$
+            \EndIf
+            \State \Return $()$
+        \EndIf
+    \EndFunction
+\end{algorithmic}
+
+\subsection{Single element to RDF}
+\label{to-rdf-algo}
+\begin{algorithmic}
+    \Function{ToRDF}{$element$}
+        \State $node\gets$ Clusterspace node having class name $element$
+        \If{$element$ has no attributes and no child elements}
+            \State \Return \Call{Lookup}{$node$, $elementText$}
+        \EndIf
+
+        \State $subject\gets$ empty resource
+        \State \Call{Emit}{$subject$, ``type'', $node$}
+
+        \ForAll{attributes of $element$}
+            \If{$attribute$ is a datatype property of $node$}
+                \State \Call{Emit}{$subject$, $property$, $attributeValue$}
+                \State \Call{Add}{$typePropInstances$, $(node,attributeValue)\rightarrow subject$}
+            \EndIf
+        \EndFor
+
+        \ForAll{children of $element$}
+            \If{$child$ has no children}
+                \If{$child$ is a datatype property}
+                    \State \Call{Emit}{$subject$, $property$, $childText$}
+                    \State \Call{Add}{$typePropInstances$, $(node,childText)\rightarrow subject$}
+                \ElsIf{$child$ is an object property}
+                    \State $range\gets$ range of object property
+                    \State Add $(subject,property,\Call{Lookup}{range,childText})$ to $unresolved$
+                \EndIf
+                \State Continue
+            \EndIf
+
+            \If{$child$ is an object property}
+                \ForAll{sub-children of $child$}
+                    \State $val\gets$ \Call{ToRDF}{$subchild$}
+                    \If{$val$ can be resolved to resource}
+                        \State $valResource\gets$ \Call{Resolve}{$val$}
+                        \State \Call{Emit}{$subject$, $property$, $valResource$}
+                    \Else
+                        \State Add $(subject,property,val)$ to $unresolved$
+                    \EndIf
+                \EndFor
+                \State Continue
+            \EndIf
+
+            \If{$child$ is a class}
+                \State $property\gets$ a possible property $n\rightarrow child$
+                \State $object\gets$ \Call{ToRDF}{$child$}
+                \State Add $(subject,property,object)$ to $unresolved$
+            \EndIf
+        \EndFor
+
+        \State \Return $subject$
+    \EndFunction
+\end{algorithmic}
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
 % adjust value as needed - may need to be readjusted if
