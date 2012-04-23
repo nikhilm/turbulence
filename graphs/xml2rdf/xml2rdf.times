@@ -1,111 +1,20 @@
 # /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.0.xml
-# Run 0
-13.704# Run 1
-10.657# Run 2
-10.488# Run 3
-10.482# Run 4
-10.616# Run 5
-10.467# Run 6
-10.457# Run 7
-10.487# Run 8
-10.491# Run 9
-10.538# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.1.xml
-# Run 0
-10.572# Run 1
-10.611# Run 2
-10.485# Run 3
-10.565# Run 4
-10.545# Run 5
-10.559# Run 6
-10.489# Run 7
-10.609# Run 8
-10.573# Run 9
-10.616# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.2.xml
-# Run 0
-10.909# Run 1
-10.657# Run 2
-10.720# Run 3
-10.709# Run 4
-10.667# Run 5
-10.583# Run 6
-10.752# Run 7
-10.612# Run 8
-10.608# Run 9
-10.571# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.3.xml
-# Run 0
-10.488# Run 1
-10.475# Run 2
-10.565# Run 3
-10.576# Run 4
-10.565# Run 5
-10.633# Run 6
-10.665# Run 7
-10.595# Run 8
-10.696# Run 9
-10.644# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.4.xml
-# Run 0
-10.654# Run 1
-10.653# Run 2
-10.612# Run 3
-10.553# Run 4
-10.635# Run 5
-10.711# Run 6
-10.960# Run 7
-10.735# Run 8
-10.678# Run 9
-10.565# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.5.xml
-# Run 0
-10.594# Run 1
-10.697# Run 2
-10.564# Run 3
-10.584# Run 4
-10.703# Run 5
-10.742# Run 6
-10.683# Run 7
-10.671# Run 8
-10.685# Run 9
-10.649# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.6.xml
-# Run 0
-10.643# Run 1
-10.637# Run 2
-10.596# Run 3
-10.718# Run 4
-10.669# Run 5
-10.666# Run 6
-10.628# Run 7
-10.677# Run 8
-10.674# Run 9
-10.662# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.7.xml
-# Run 0
-10.658# Run 1
-10.615# Run 2
-10.648# Run 3
-10.672# Run 4
-10.674# Run 5
-10.676# Run 6
-10.655# Run 7
-10.624# Run 8
-10.639# Run 9
-10.673# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.8.xml
-# Run 0
-10.645# Run 1
-10.647# Run 2
-10.630# Run 3
-10.660# Run 4
-10.642# Run 5
-10.660# Run 6
-10.639# Run 7
-10.605# Run 8
-10.642# Run 9
-10.608# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.9.xml
-# Run 0
-10.645# Run 1
-10.679# Run 2
-10.671# Run 3
-10.638# Run 4
-10.631# Run 5
-10.693# Run 6
-10.683# Run 7
-10.661# Run 8
-10.607# Run 9
-10.645
+10.657 10.488 10.482 10.616 10.467 10.457 10.487 10.491 10.538
+# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.1.xml
+10.611 10.485 10.565 10.545 10.559 10.489 10.609 10.573 10.616
+# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.2.xml
+10.657 10.720 10.709 10.667 10.583 10.752 10.612 10.608 10.571
+# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.3.xml
+10.475 10.565 10.576 10.565 10.633 10.665 10.595 10.696 10.644
+# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.4.xml
+10.653 10.612 10.553 10.635 10.711 10.960 10.735 10.678 10.565
+# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.5.xml
+10.697 10.564 10.584 10.703 10.742 10.683 10.671 10.685 10.649
+# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.6.xml
+10.637 10.596 10.718 10.669 10.666 10.628 10.677 10.674 10.662
+# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.7.xml
+10.615 10.648 10.672 10.674 10.676 10.655 10.624 10.639 10.673
+# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.8.xml
+10.647 10.630 10.660 10.642 10.660 10.639 10.605 10.642 10.608
+# /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/mega.9.xml
+10.679 10.671 10.638 10.631 10.693 10.683 10.661 10.607 10.645
