@@ -16,7 +16,7 @@
 %     Created: Mon Apr 16 03:00 PM 2012 I
 % Last Change: Mon Apr 16 03:00 PM 2012 I
 %
-\documentclass[conference]{IEEEtran}
+\documentclass[journal]{IEEEtran}
 
 \usepackage{cite, graphicx, subfigure, amsmath, algpseudocode, float}
 \usepackage[bookmarks=true,colorlinks=false,pdfborder={0 0 0}]{hyperref}
@@ -36,28 +36,30 @@
 \begin{document}
 %
 % paper title
-\title{Semantic mapping of XML metadata on the Cloud}
+\title{Semantic Mapping of XML Metadata on the Cloud}
 %
 % author names and IEEE memberships
-\author{\IEEEauthorblockN{Nikhil Marathe}
-\IEEEauthorblockA{
-    Dhirubhai Ambani Institute of Information and Communication Technology\\
-    Gandhinagar, Gujarat - 382007\\
-    \texttt{200801011@daiict.ac.in}
-}
-\emph{Supervisor}\\\emph{Dr. Sourish Dasgupta}
+\author{Nikhil Marathe\\
+    \emph{Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar}\\
+    \texttt{200801011@daiict.ac.in}\\
+    \emph{Supervisor}\\
+    \emph{Dr. Sourish Dasgupta}\\
 }% <-this % stops a space
 %
 
 % make the title area
 \maketitle
+\markboth{This Report is Submitted in the partial fulfillment of the requirements towards the award of B.Tech. (ICT) degree, 2012.}{}
+
 
 \begin{abstract}
-    We propose a system for conversion of XML data from heterogenous services
-    into structured data with semantic information and its storage in
-    a distributed manner. The system implements a triplestore over
-    a distributed key-value store using a unique graph mapping of ontologies to
-    allow fast retrieval.
+    This project proposes and implements a system for conversion of XML data
+    from heterogenous services across various domains into a structured,
+    semantically encoded form. It describes a basic XML to RDF conversion
+    algorithm. To deal with the large amounts of data, the system is built to
+    be run on a distributed platform. To this end we suggest
+    a \emph{clusterspace} approach to basic OWL reasoning, and a \emph{triple
+    store} implemented on a distributed database.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -85,8 +87,8 @@ This paper makes the following contributions:
 
 \begin{itemize}
     \item Provides an attempt at translating XML data to structured RDF data.
-    \item Presents a conversion of ontology data to a cached 'Clusterspace' to
-        allow fast, distributed reads.
+    \item Presents a conversion of ontology data to a cached \emph{Clusterspace} to
+        allow fast, distributed reads of DL-reasoning over the ontology.
     \item Storage of RDF data over a distributed key-value store and the
         problem that occurs in real implementation.
 \end{itemize}
@@ -94,19 +96,8 @@ This paper makes the following contributions:
 \section{Background}
 \label{sec:background}
 
-
-TODO: diff between XML and RDF
-
 \section{System}
-Our system has the following core modules (see Figure \ref{fig:architecture}):
-
-\begin{itemize}
-    \item \emph{Clusterspace} - A graph of the various concepts spanning all
-        known ontologies.
-    \item \emph{Triple store} - An RDF triple store implemented over a distributed key-value store.
-    \item \emph{XML to RDF converter} - Attempts to generate a set of RDF
-        triples from semantic information extracted from XML data.
-\end{itemize}
+The architecture of the implementation is outlined in Figure \ref{fig:architecture}.
 
 \begin{figure}
     \centering
@@ -130,14 +121,15 @@ data in the database via the SPARQL interface.
 
 \subsection{Clusterspace}
 The Clusterspace is a graph representation of a subset of the axioms stated by
-all known ontologies. The Clusterspace is built up by using a \emph{reasoner}
-TODO:which? the first time an ontology is introduced to the system.
+all known ontologies. The Clusterspace is built up by using a DL-reasoner the
+first time an ontology is introduced to the system.
 
-The Clusterspace stores two distinct directed trees. One is the Class heirarchy
-and the other is the Property heirarchy. As new ontologies are introduced, the
+It uses a subset of the information inferred by the Ontology to create two
+distinct trees. One is the Class heirarchy and the other is the Property
+heirarchy. The Class heirarchy features the known top-level classes as the
+roots and the subclasses as children. As new ontologies are introduced, the
 reasoner is used to find the appropriate position to insert the class
-(\texttt{rdf:Class}) in the Class heirarchy. The Class heirarchy has as its
-roots the classes that have no super-classes. We choose not to deal with
+(\texttt{rdf:Class}) in the Class heirarchy. We choose not to deal with
 \texttt{owl:Thing} as the single root unless an ontology explicitly introduces
 it. The Property heirarchy is similar but uses the \texttt{rdf:subPropertyOf}
 relationship to infer the heirarchy.
@@ -157,15 +149,23 @@ The advantages and limitations of building up a Clusterspace are:
     \item Fast lookup of known classes using exact or approximate matches.
     \item Reasoning only has to be performed once, after that only simple graph
         traversal is required.
-    \item Clusterspace can be shared and updated across a distributed system.
+    \item Horizontal scalability - The Clusterspace can be thought of as the
+        serialization of the inferences established by a DL-reasoner. Storing
+        it in a graph like manner allows known, fast, read-only algorithms to
+        be run over it. Copies of the graph can be maintained by all server
+        nodes and all can be kept in sync using proven eventually consistent
+        systems\cite{Vogels08consistent}. This way a large number of clients
+        can be served without duplicate reasoning required each time.
 \end{itemize}
 
 \subsubsection*{Limitations}
 \begin{itemize}
-    \item The Clusterspace does not encode full reasoning information.
-    \item Complete RDFS entailment support is not currently implemented. (For
-        example, relationship transitivity is not implemented yet.)
-    \item Datatype information for the range is lost on Datatype Properties.
+    \item The Clusterspace does not encode full reasoning information - Since
+        the Clusterspace only captures classes and properties, inferences over
+        individuals and instances are not recorded. In a system meant more for
+        data mining than highly specific queries, this may not be a problem,
+        but it is not general purpose. Currently it also does not handle
+        transitive properties.
 \end{itemize}
 
 Once the Clusterspace has been extended with some ontology, queries over that
@@ -174,33 +174,33 @@ ontology can be augmented with entailment. For example, the query:
 \begin{verbatim}
 PREFIX db: <http://dbpedia.org/ontology/>
 SELECT ?p WHERE {
-    ?b a db:Book .
-    ?p a db:Person .
-    ?b db:author ?p .
+    ?b a db:Film .
+    ?p a db:Actor .
+    ?p db:birthName ``George Clooney'' .
+    ?b db:starring ?p .
 }
 \end{verbatim}
 
-over \ref{fig:person-cs-example}, will return books written by actors as well
-as politicians. Since a Book is a Work, property ``author'' has domain as Work
-and range as Person, and Actor and Politician are subclasses of Person.
-
-\begin{figure}
-    \caption{Sample Clusterspace - DBpedia Work and Person}
-    \label{fig:person-cs-example}
-\end{figure}
+over Figure \ref{fig:cs}, will return all movies which George Clooney has starred in.
+Since a Film is a Work, property ``starring'' has domain as Work
+and range as Person, and Actor is a subclass of Person.
 
 \subsection{XML to RDF conversion}
 
-The current implementation of the XML to RDF conversion takes a very naive
-approach to extracting information from the XML data. It can be immensely
-augmented by using statistical properties and methods from Information
-Retrieval.
+Although XML datasets abound on the Web and many modern APIs from various
+services provide data in XML, it suffers from lack of absolute structure, well
+known meanings to tags and the problem of \emph{unique instance
+identification}. This lack of identity is often alleviated in an ad-hoc manner
+by using attributes, but these are restricted to the document and may not be
+unique. RDF addresses this issue by introducing the \texttt{rdf:about} and
+\texttt{rdf:resource} attributes, in combination with URIs to assign unique
+IDs. RDF Schema also specifies the semantic meaning of all RDF tags. In XML
+we've to compensate for the lack of identification by using clues from the
+surrounding text in the document.
 
-The fundamental difference between plain XML and semantic data is explained in
-section~\ref{sec:background}. For example consider
-document~\ref{ex:xml-rec}\footnote{Based on the Music Ontology
-- http://purl.org/ontology/mo/}. Here it is quite evident to a human that
-Record ``OK Computer'' contains the track ``Paranoid Android'' of duration
+For example consider document~\ref{ex:xml-rec}\footnote{Based on the Music
+Ontology - http://purl.org/ontology/mo/}. Here it is quite evident to a human
+that record ``OK Computer'' contains the track ``Paranoid Android'' of duration
 384000ms. We use the known data properties of tags found in the data to figure
 out if a datatype property reference can be resolved to a known instance
 specified somewhere else in the document. We observe that the value of
@@ -254,6 +254,11 @@ this instance. A child tag can be:
         their range. The first of these is picked to create the triple.
 \end{enumerate}
 
+The current implementation of the XML to RDF conversion takes a very naive
+approach to extracting information from the XML data. It can be immensely
+augmented by using statistical properties and methods from Information
+Retrieval.
+
 \begin{figure}
     \caption{Example XML document.}
     \label{ex:xml-rec}
@@ -288,19 +293,16 @@ this instance. A child tag can be:
 Apache Cassandra\footnote{http://cassandra.apache.org} is a distributed,
 column-oriented, eventually-consistent database, based on the Google
 Bigtable\cite{Chang06bigtable:a} and Amazon
-Dynamo\cite{Hastorun07dynamo:amazon's} systems. It provides a non-relational
+Dynamo\cite{Hastorun07dynamo} systems. It provides a non-relational
 key-value database with replication and partitioning across a cluster. Using
-the concept of super-columns, Cassandra also allows a two-level hash table,
-${ key1 : { key2 : value } }$.
-
-TODO: What is Cassandra and Why Cassandra?
+the concept of super-columns, Cassandra also allows a two-level hash table:
+$$\{ key1 : \{ key2 : value \} \}$$
 
 The Cassandra data model allows nested storage using super columns. We use the
-approach described by Ladwig and Harth\cite{ladwig:11}, but only maintain two
-models - SPO and OPS. In SPO each subject instance is a row key, the predicate
-name is the supercolumn key and each object is one column. The OPS index is
-used for performance improvements. We provide two additional Column-families in
-our system.
+heirarchial approach described by Ladwig and Harth\cite{ladwig:11}, but only
+maintain two models - SPO and OPS. In SPO each subject instance is a row key,
+the predicate name is the supercolumn key and each object is one column. We
+provide two additional Column-families in our system.
 
 \begin{enumerate}
     \item \emph{Concepts} - Each row is the full IRI of a class from the known
@@ -308,20 +310,17 @@ our system.
         addition instances of subclasses are also stored for the class.
 
     \item \emph{InstanceData} - Since our system is designed for data mining,
-        the SPARQL response is not simply a set of triples, but full RDF dumps
-        for each subject of the triples in the final result. To prevent having
-        to iterate over all of an instances properties every time, a complete
-        RDF/XML representation of every instance is kept in this column family,
-        indexed by the IRI of the instance.
+        the SPARQL response is not simply a set of triples, but full RDF data
+        for each variable in the final result. To prevent having to iterate
+        over all of an instances properties every time, a complete RDF/XML
+        representation of every instance is kept in this column family, indexed
+        by the IRI of the instance. This is built up when data is stored.
 
 \end{enumerate}
 
 \section{Evaluation}
 
-The implementation of the system was done in Java and run on JVM version 1.6. The main
-process was run with a maximum heap size of 2G and a start heap size of 1G.
-
-The actual implementation uses the following libraries:
+The implementation was in Java and uses the following libraries:
 \begin{enumerate}
     \item Neo4j\footnote{http://neo4j.org} for the Clusterspace.
     \item Apache Cassandra\footnote{http://cassandra.apache.org} for the data storage.
@@ -331,32 +330,33 @@ The actual implementation uses the following libraries:
     \item Pellet\cite{Parsia04pellet:an} as the DL-reasoner.
 \end{enumerate}
 
-We performed performance evaluations for our system in four parts.
-
 For all tests, the hardware was a 2011 Macbook Pro with Snow Leopard 10.6.8,
 2.3GHz Intel Core i7, 8GB RAM, and a 7200rpm Hard Drive.  JVM 1.6.0 was used.
-  The start heap size for the system was 1G, for Cassandra it was 400M. Max
-  heap size for the system was 2G, for Cassandra it was 4G.
+The start heap size for the system was 1G, for Cassandra it was 400M. Max
+heap size for the system was 2G, for Cassandra it was 2G.
 
 For the distributed Cassandra test a cluster of 4 nodes on Amazon
-EC2\footnote{TODO} was used.  Each machine had 8GB of RAM, out of which
-Cassandra was allocated 4GB. One of the nodes ran our system. TODO processors on each?
-+ OS.
+EC2\footnote{http://aws.amazon.com/ec2/} was used.  Each instance had a 64-bit
+dual-core processor and 8GB of RAM running the Cassandra Datastax AMI (an
+Ubuntu variant with Cassandra pre-installed).  Cassandra was allocated 4GB of
+memory. One of the nodes ran our system.
 
-The dataset used for the data loading and queries was generated by the LUBM
-\texttt{ubt} generator tool. LUBM provides 14 queries to measure the
-performance of a system. Queries 11, 12 and 13 are not applicable to the system
-as it does not perform full RDFS entailment yet. Queries 2, 7 and 9 would
-either timeout or the Jena SPARQL processor would run out of memory and halt,
-hence these queries have not been performed.
+The dataset used for the data loading and queries was generated by the
+LUBM\cite{Guo05lubm} \texttt{ubt} generator tool. LUBM provides 14 queries to
+measure the performance of a system. Queries 11, 12 and 13 are not applicable
+to the system as it does not perform full RDFS entailment yet. Queries 2, 7 and
+9 would either timeout or the Jena SPARQL processor would run out of memory
+when run on the Macbook Pro. Hence these queries have not been performed.
+
+We performed performance evaluations for our system in four parts.
 
 \subsection{Loading an ontology in the clusterspace}
 
-\subsubsection{Time for class heirarchy formation}
-
-The DBpedia ontology v3.6 has 272 classes, 629 object properties and 706
-datatype properties. One of the key measures is the time taken to build the
-class heirarchy. Therefore we ran runs with modified DBpedia ontologies to have
+The DBpedia ontology\cite{Auer07dbpedia}
+v3.6\footnote{http://wiki.dbpedia.org/Downloads36} has 272 classes, 629 object
+properties and 706 datatype properties. One of the key measures is the time
+taken to build the class heirarchy. Therefore we ran runs with modified DBpedia
+ontologies to have
 10 to 272 classes, randomly picked. 10 versions of each ontology was generated
 and the time averaged. Each test itself was also run 10 times. The first
 result was excluded since to allow for the data to be loaded into RAM and
@@ -377,8 +377,12 @@ accounting for an approximately logarithmic factor.
 \subsection{XML to RDF conversion time}
 
 To measure the time taken for XML to RDF conversion, a collection of sample RDF file
-generated using the LUBM data generator was used. A tool which read RDF and generated random XML structures
-was used to generate 10 versions of each RDF file. Each XML file was run through the converter 5 times. The test results are in Figure \ref{fig:eval:xml2rdf}. The use of hash tables keeps the time taken linear with respect to the increase in inferred triples.
+generated using the LUBM data generator was used. A tool which read RDF and
+generated random XML structures was used to generate 10 versions of each RDF
+file. Each XML file was run through the converter 5 times. The test results are
+in Figure \ref{fig:eval:xml2rdf}. The \emph{x-axis} lists the number of class
+and property instances in the original RDF file. The use of hash tables keeps
+the time taken linear with respect to the increase in inferred triples.
 
 \begin{figure}[h]
     \centering
@@ -427,13 +431,24 @@ other database cannot simply swap out its general storage system for
 a distributed one. In our case, the fact that SPARQL query resolution was still
 being done on one machine, with limited memory proved a problem with timeouts
 or out of memory errors. Further, network I/O is considerably slower than disk
-I/O. Requesting data from Cassandra, processing it, then requesting more data
-was an anti-pattern. A triplestore which instead sends the computation (the
-SPARQL query) to each Cassandra node, using something like
+I/O. As can be seen in the results of Query 14, which is a simple query for all
+\texttt{GraduateStudent}s and needs only $n+1$ lookups in Cassandra, where $n$
+is the number of known \texttt{GraduateStudent}s, network performance proved to
+be the undoing.  Requesting data from Cassandra, processing it, then requesting
+more data is an anti-pattern. A triplestore which instead sends the computation
+(the SPARQL query) to each Cassandra node, using something like
 MapReduce\cite{Dean04mapreduce:simplified} and only transfers the final results
 back to the server serving the client may give better performance than a single
-node dealing with similar or larger
-datasets\cite{myung10spa}\cite{hus09hadoop}.
+node dealing with similar or larger datasets. Progress has been made in the
+direction in recent times\cite{myung10spa}\cite{hus09hadoop}.
+
+Another bottleneck is that our system has to retrieve all the triples for any
+resource in the query solution to offer more data about the instances. This
+causes a lot of I/O after query operations have completed.
+
+\subsection{Accuracy of XML conversion}
+
+TODO:
 
 %\begin{figure}[h]
 %    \centering
@@ -477,14 +492,36 @@ datasets\cite{myung10spa}\cite{hus09hadoop}.
 %\end{table}
 
 \section{Conclusion and future work}
-We have shown that a basic attempt at conversion of XML also performs relatively well under certain constraints. The Clusterspace approach has been shown to allow high-availability caching of inferences obtained from an OWL reasoner, allowing multiple instances of the system's query interface to serve a number of clients simultaneously. Cassandra performs well as a triple-store for large volumes of data but relatively simple queries, which is usually the case for purposes of machine learning or statistical analysis. The extra information returned by our system makes it easy for mining tools to extract data, rather than create multiple queries. It should be noted that the implementation of our system was a proof of concept and is unoptimized. Especially in the case of Cassandra, significant gains can be achieved by buffering data better.
+We have shown that a basic attempt at conversion of XML also performs
+relatively well under certain constraints. The Clusterspace approach has been
+shown to allow high-availability caching of inferences obtained from an OWL
+reasoner, allowing multiple instances of the system's query interface to serve
+a number of clients simultaneously. Cassandra proves a good option as
+a triple-store for large volumes of data and offers a schema that is true to
+the concept of RDF triples, while being flexible unlike relational databases.
+The extra information returned by our system makes it easy for mining tools to
+extract data, rather than create multiple queries. It should be noted that the
+implementation of our system was a proof of concept and is unoptimized.
+Especially in the case of Cassandra, significant gains can be achieved by
+buffering data better.
 
-There are significant improvements that can be done to this system, to create a deployable, high-performance product, particularly:
-
+Further research that can improve this system is:
 \begin{enumerate}
-    \item Using statistical information in conversion of XML to RDF. This can include tolerating typos, inferencing possible ontologies based on the sub-tags and other improvements.
-    \item Using MapReduce over Cassandra for triple retrieval - Currently query resolution is done only on one machine, making it a bottleneck. Query resolution is a massively parallel task and applying MapReduce\cite{Dean04mapreduce:simplified}\cite{hus09hadoop} would yield substantial improvements.
-    \item Real-time processing - Miners could register queries with the system and as data was submitted by publishers in real-time, the system could match the queries and notify the miners of new data satisfying the queries\cite{Aba03aurora}.
+
+    \item Using statistical information in conversion of XML to RDF. This can
+        include tolerating typos, inferencing possible ontologies based on the
+        sub-tags and other improvements.
+
+    \item Using MapReduce over Cassandra for triple retrieval - Currently query
+        resolution is done only on one machine, making it a bottleneck. Query
+        resolution is a massively parallel task and applying
+        MapReduce\cite{Dean04mapreduce:simplified}\cite{hus09hadoop} would
+        yield substantial improvements.
+
+    \item Real-time processing - Miners could register queries with the system
+        and as data was submitted by publishers in real-time, the system could
+        match the queries and notify the miners of new data satisfying the
+        queries\cite{Aba03aurora}.
 \end{enumerate}
 
 %\pagebreak
@@ -702,7 +739,7 @@ There are significant improvements that can be done to this system, to create a 
 % number - used to balance the columns on the last page
 % adjust value as needed - may need to be readjusted if
 % the document is modified later
-\IEEEtriggeratref{8}
+%\IEEEtriggeratref{8}
 % The "triggered" command can be changed if desired:
 %\IEEEtriggercmd{\enlargethispage{-5in}}
 
