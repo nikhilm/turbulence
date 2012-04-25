@@ -185,6 +185,8 @@ interface Resolver {
 }
 
 class LookupResolver implements Resolver {
+    private static final Log logger =
+        LogFactory.getLog(LookupResolver.class);
     String typeIRI;
     String key;
     Map<String, Map<String, Resource>> lookup;
@@ -195,8 +197,9 @@ class LookupResolver implements Resolver {
     }
 
     public Resource resolve() {
-        if (lookup.containsKey(typeIRI) && lookup.get(typeIRI).containsKey(key))
+        if (lookup.containsKey(typeIRI) && lookup.get(typeIRI).containsKey(key)) {
             return lookup.get(typeIRI).get(key);
+        }
         return null;
     }
 }
@@ -213,6 +216,8 @@ class ConcreteResolver implements Resolver {
 }
 
 class MyTriple {
+    private static final Log logger =
+        LogFactory.getLog(MyTriple.class);
     private Resource subject;
     private Property predicate;
     private List<Resolver> possibleObjects;
@@ -277,11 +282,11 @@ public class StoreXMLDataAction implements Action {
         if (n == null)
             return null;
 
-        Resource subject = model.createResource();
+        Resource subject = model.createResource(AnonId.create());
 
         // reference to something defined elsewhere
         if (element.getChildren().isEmpty() && element.getAttributes().isEmpty()) {
-            String text = element.getTextTrim();
+            String text = element.getTextNormalize();
             if (!text.isEmpty()) {
                 return new LookupResolver((String)n.getProperty("IRI"), text, typePropInstances);
             }
@@ -316,7 +321,7 @@ public class StoreXMLDataAction implements Action {
                     String subjectType = (String) n.getProperty("IRI");
                     if (!typePropInstances.containsKey(subjectType))
                         typePropInstances.put(subjectType, new HashMap<String, Resource>());
-                    typePropInstances.get(subjectType).put(child.getTextTrim(), subject);
+                    typePropInstances.get(subjectType).put(child.getTextNormalize(), subject);
                 }
                 if (opRel != null) {
                     TraversalDescription cover = Traversal.description().breadthFirst().relationships(ClusterSpace.PublicRelTypes.EQUIVALENT_CLASS).relationships(ClusterSpace.PublicRelTypes.IS_A, Direction.INCOMING);
@@ -326,7 +331,7 @@ public class StoreXMLDataAction implements Action {
                         // because the property could be any of the subclass
                         // types as well, we need to add a resolver for each
                         // pick the one that succeeds
-                        Resolver res = new LookupResolver((String)r.getProperty("IRI"), child.getTextTrim(), typePropInstances);
+                        Resolver res = new LookupResolver((String)r.getProperty("IRI"), child.getTextNormalize(), typePropInstances);
                         resolvers.add(res);
                     }
                     //logger.warn("opRel " + n.getProperty("IRI") + " " + child.getName() + " match " + opRel.getProperty("IRI"));
@@ -341,13 +346,16 @@ public class StoreXMLDataAction implements Action {
 
             Relationship opRel = opMatcher.match(child.getName());
             if (opRel != null) {
+                logger.warn(opRel.getProperty("IRI"));
                 for (Element subChild : child.getChildren()) {
                     Resolver val = toRDF(subChild);
                     if (val == null)
                         continue;
 
-                    if (val instanceof ConcreteResolver)
+                    if (val instanceof ConcreteResolver) {
+                        logger.warn("Concerete");
                         model.add(model.createStatement(subject, model.createProperty((String)opRel.getProperty("IRI")), val.resolve()));
+                    }
                     else
                         needResolution.add(new MyTriple(subject, model.createProperty((String)opRel.getProperty("IRI")), val));
                 }
@@ -444,6 +452,8 @@ public class StoreXMLDataAction implements Action {
                 if (s != null)
                     model.add(s);
             }
+            model.write(System.err, "N-TRIPLES");
+
         } catch (JDOMException e) {
             e.printStackTrace();
             return new StreamingOutput() {
