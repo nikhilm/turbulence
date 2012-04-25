@@ -168,7 +168,8 @@ public class RegisterSchemaAction implements Action {
         }
         long _ct = System.currentTimeMillis() - t;
 
-        for (OWLAxiom c : ont.getAxioms(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
+        Set<String> dealt = new HashSet<String>();
+        for (OWLAxiom c : ont.getAxioms(AxiomType.OBJECT_PROPERTY_DOMAIN, true)) {
             OWLObjectPropertyDomainAxiom ax = (OWLObjectPropertyDomainAxiom) c;
             // TODO: if domain or range is a union, then run for each class
             if (ax.getProperty().isAnonymous())
@@ -181,11 +182,21 @@ public class RegisterSchemaAction implements Action {
                 Node rNode = linkProperty(ax.getProperty().asOWLObjectProperty(), reasoner);
                 if (rNode != null)
                     rNode.createRelationshipTo(ontNode, ClusterSpace.InternalRelTypes.SOURCE_ONTOLOGY);
-                for (OWLClassExpression range : ax.getProperty().getRanges(ont)) {
-                    if (range.isAnonymous())
-                        continue;
-                    createObjectPropertyRelationship(iri, ax.getProperty().asOWLObjectProperty(), ax.getDomain().asOWLClass(), range.asOWLClass());
+                Set<OWLClassExpression> ranges = ax.getProperty().getRanges(ont);
+                if (ranges.isEmpty()) {
+                    Collection<Node> roots = getRoots();
+                    for (Node root : roots) {
+                        createObjectPropertyRelationship(iri, ax.getProperty().asOWLObjectProperty(), ax.getDomain().asOWLClass(), root);
+                    }
                 }
+                else {
+                    for (OWLClassExpression range : ax.getProperty().getRanges(ont)) {
+                        if (range.isAnonymous())
+                            continue;
+                        createObjectPropertyRelationship(iri, ax.getProperty().asOWLObjectProperty(), ax.getDomain().asOWLClass(), range.asOWLClass());
+                    }
+                }
+                dealt.add(ax.getProperty().asOWLObjectProperty().getIRI().toString());
                 tx.success();
             } catch (Exception e) {
                 logger.warn(e);
@@ -194,7 +205,26 @@ public class RegisterSchemaAction implements Action {
             }
         }
 
-        Set<String> dealt = new HashSet<String>();
+        for (OWLObjectProperty pr : ont.getObjectPropertiesInSignature(true)) {
+            if (dealt.contains(pr.getIRI().toString()))
+                continue;
+            if (pr.getDomains(ont).isEmpty()) {
+                Collection<Node> droots = getRoots();
+                for (Node droot : droots) {
+                    if (pr.getRanges(ont).isEmpty()) {
+                        Collection<Node> rroots = getRoots();
+                        for (Node rroot : rroots) {
+                            createObjectPropertyRelationship(iri, pr, droot, rroot);
+                        }
+                    }
+                    else {
+                        for (OWLClassExpression r : pr.getRanges(ont))
+                            createObjectPropertyRelationship(pr.getIRI(), pr, droot, r.asOWLClass());
+                    }
+                }
+            }
+        }
+
         for (OWLAxiom c : ont.getAxioms(AxiomType.DATA_PROPERTY_DOMAIN, true)) {
             OWLDataPropertyDomainAxiom ax = (OWLDataPropertyDomainAxiom) c;
             if (ax.getProperty().isAnonymous())
@@ -610,14 +640,7 @@ public class RegisterSchemaAction implements Action {
         return n;
     }
 
-    private void createObjectPropertyRelationship(IRI ontologyIRI, OWLObjectProperty property, OWLClass domain, OWLClass range) {
-        Node domainNode = getClassNode(domain);
-        if (domainNode == null)
-            return;
-        Node rangeNode = getClassNode(range);
-        if (rangeNode == null)
-            return;
-
+    private void createObjectPropertyRelationship(IRI ontologyIRI, OWLObjectProperty property, Node domainNode, Node rangeNode) {
         Transaction tx = cs.beginTx();
         try {
             // TODO set column family location on domain
@@ -629,6 +652,30 @@ public class RegisterSchemaAction implements Action {
         } finally {
             tx.finish();
         }
+    }
+
+    private void createObjectPropertyRelationship(IRI ontologyIRI, OWLObjectProperty property, OWLClass domain, OWLClass range) {
+        Node domainNode = getClassNode(domain);
+        if (domainNode == null)
+            return;
+        Node rangeNode = getClassNode(range);
+        if (rangeNode == null)
+            return;
+        createObjectPropertyRelationship(ontologyIRI, property, domainNode, rangeNode);
+    }
+
+    private void createObjectPropertyRelationship(IRI ontologyIRI, OWLObjectProperty property, Node domainNode, OWLClass range) {
+        Node rangeNode = getClassNode(range);
+        if (rangeNode == null)
+            return;
+        createObjectPropertyRelationship(ontologyIRI, property, domainNode, rangeNode);
+    }
+
+    private void createObjectPropertyRelationship(IRI ontologyIRI, OWLObjectProperty property, OWLClass domain, Node rangeNode) {
+        Node domainNode = getClassNode(domain);
+        if (domainNode == null)
+            return;
+        createObjectPropertyRelationship(ontologyIRI, property, domainNode, rangeNode);
     }
 
     private void createDataProperty(IRI ontologyIRI, OWLDataProperty property, Node domainNode, OWLDataRange range) {
@@ -649,6 +696,7 @@ public class RegisterSchemaAction implements Action {
         Node domainNode = getClassNode(domain);
         if (domainNode == null)
             return;
+        createDataProperty(ontologyIRI, property, domainNode, range);
     }
 
 }
