@@ -96,6 +96,8 @@ This paper makes the following contributions:
 \section{Background}
 \label{sec:background}
 
+TODO
+
 \section{System}
 The architecture of the implementation is outlined in Figure \ref{fig:architecture}.
 
@@ -245,9 +247,7 @@ this instance. A child tag can be:
         object in the $(subject, property, object)$ triple is a reference. This
         reference can be from any of the classes in the range of the object
         property. If the child has tags then each of those tags are treated as
-        a possible description of an instance and parsed recursively. TODO:
-        mention using statistics to deal with a tag defined only by its
-        properties.
+        a possible description of an instance and parsed recursively.
     \item \emph{A class} - In this case the tag is defining an instance or
         reference. Based on the known object properties, our system attempts to
         find possible object properties on the $subject$ that have the class in
@@ -499,6 +499,22 @@ SELECT ?X WHERE {
     \label{fig:eval:accu}
 \end{figure}
 
+As can be seen in Figure \ref{fig:eval:accu}, even the naive implementation of
+the XML conversion works well. Query 1 achieves on an average 1.2 matches vs
+the reference 4 matches. In addition Query 1 gives on an average a set of 0.8
+false results on an average (Students who are not actually taking the course
+but being a teaching assistant). This happens because it picks
+\texttt{ub:takesCourse} when no relationship is specified, because it comes
+first in the Clusterspace graph. Perfect recall is achieved on query 2 and
+4 since these do not depend on inferencing which relationship may be possible
+between a subject and an object. Query 3 manages to infer about 70\% of the
+object relationships. This figure is the one most likely to fluctuate
+significantly depending on ontologies and data sources in this
+implementation, because if a subject has multiple relationships to objects of
+the same class, then it just picks the first one (similar to the false
+results in query 1). Over all, the accuracy of conversion is very good within
+the tight constraints on the format imposed by the algorithm.
+
 %\begin{figure}[h]
 %    \centering
 %    \includegraphics[scale=0.35]{../../graphs/full-register/register}
@@ -558,8 +574,9 @@ Further research that can improve this system is:
 \begin{enumerate}
 
     \item Using statistical information in conversion of XML to RDF. This can
-        include tolerating typos, inferencing possible ontologies based on the
-        sub-tags and other improvements.
+        include tolerating typos, using synonyms, inferencing possible
+        ontologies based on the sub-tags and other improvements which could
+        allow significant flexibility in the input XML data.
 
     \item Using MapReduce over Cassandra for triple retrieval - Currently query
         resolution is done only on one machine, making it a bottleneck. Query
