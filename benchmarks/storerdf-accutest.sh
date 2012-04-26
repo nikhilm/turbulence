@@ -14,5 +14,6 @@ mvn exec:java -Dexec.mainClass=com.turbulence.Turbulence&
 PID=$!
 sleep 3
 cat /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/12/data.$num.xml.rdf | curl -v -X POST -H "Content-Type: application/xml" http://localhost:5000/api/1/store_data --data-binary @-
+#cat /Users/nikhilmarathe/Downloads/datasets/lubm/u0xml/12/data.owl | curl -v -X POST -H "Content-Type: application/xml" http://localhost:5000/api/1/store_data --data-binary @-
 kill -TERM $PID
 kill -TERM $CPID
