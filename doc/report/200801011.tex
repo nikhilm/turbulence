@@ -116,7 +116,7 @@ has proposed a markup format called GRDDL\footnote{http://www.w3.org/TR/grddl/}
 to use XSLT to obtain RDF triples from XML. Similarly
 microformats\cite{Khare:06} allow embedding of data in a standardised format
 which can be used to extract semantic information from websites. These and some
-other approaches\cite{Lange09krextor}\cite{Akh08xsp} require the specification
+other approaches\cite{Akh08xsp} require the specification
 of some sort of mapping from XML to RDF or from XML Schema to Ontology and so
 requires significant effort for every XML format.
 
@@ -183,7 +183,7 @@ ontology is shown in Figure \ref{fig:cs}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.6]{images/cs}
+    \includegraphics[scale=0.5]{images/cs}
     \caption{Clusterspace}
     \label{fig:cs}
 \end{figure}
@@ -433,11 +433,11 @@ To measure the time taken for XML to RDF conversion, a collection of sample RDF
 file generated using the LUBM data generator was used. We did not continue with
 DBpedia since we could not generate custom datasets of various sizes as
 required. The LUBM benchmark includes tools to do so. A tool which read RDF and
-generated random XML structures was used to generate 10 versions of each RDF
-file. Each XML file was run through the converter 5 times. The test results are
-in Figure \ref{fig:eval:xml2rdf}. The \emph{x-axis} lists the number of class
-and property instances in the original RDF file. The use of hash tables keeps
-the time taken linear with respect to the increase in inferred triples.
+generated random XML structures was used to generate 93 random XML files, each
+ranging from 200Kb-400Kb in size.  Each XML file was run through the converter.
+A subset of the files is shown in the graph of Figure \ref{fig:eval:xml2rdf}
+due to shortage of space.  This shows that XML conversion is quite efficient.
+The use of hash tables and using the Clusterspace allows it to be fast.
 
 \begin{figure}[h]
     \centering
