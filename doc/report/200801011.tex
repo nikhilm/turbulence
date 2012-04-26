@@ -68,51 +68,89 @@
 \end{IEEEkeywords}
 
 \section{Introduction}
-\IEEEPARstart{T}{he} semantic web has made significant strides in the recent
-past. The Linked Data initiative aims to make graph structured data encoded in
-RDF and available over HTTP. Still there remains a significant portion of data
-that is unstructured or semi-structured but contains valuable information. An
-example of this is microformats\cite{Khare:06} embedded in web pages or the
-various formats used by social networks to publish various messages about the
-activity of their members. This information is not available in a semantically
-aware form due to various reasons. For example, the micro-blogging website
-Twitter produces
-340 million tweets
-a day\footnote{http://blog.twitter.com/2012/03/twitter-turns-six.html}.
-This data is available in custom XML format. Similarly various scientific
-sensors around the world constantly produce data. The rate of data
-production on the Internet is sky-rocketing, and storage and analysis of
-this data has become a new computing problem under the moniker of Big Data.
-This paper makes the following contributions:
+\IEEEPARstart{T}{raditionally} the semantic web has been restricted to academia
+and governments and has resisted adoption by the most popular websites. So
+called Web 2.0 websites, which are interactive and constantly producing new
+data have stuck to custom data exchange formats and APIs. Similarly embedded
+devices like scientific sensors, environment monitors and other devices stick
+to custom binary formats.  While the Linked Data initiative has led to
+availability of more structured data yet each of these datasets is on their own
+websites, and requires parties interested in consuming them to crawl individual
+databases. An alternative architecture would be a distributed ecosystem of
+semantic databases that can be used by multiple data producers, and whose data
+can be retrieved by multiple consumers. Dealing with such large volumes of data
+will require a distributed implementation of an RDF store. Soft real-time
+systems are more likely to be interested in instantaneous updates rather than
+in highly complex query processing, so that the database will not require
+comprehensive reasoning over the ontology space, but rather fast reasoning
+which can be re-used. The use of XML as a data format poses a problem of
+extracting semantic information since XML is loosely structured. The same tag
+may have different meanings in different systems and the definition of
+uniqueness may differ. Thus, to allow standardized queries, we present an
+attempt at extracting semantic information from XML. The contributions of this
+paper are:
 
 \begin{itemize}
-    \item Provides an attempt at translating XML data to structured RDF data.
-    \item Presents a conversion of ontology data to a cached \emph{Clusterspace} to
-        allow fast, distributed reads of DL-reasoning over the ontology.
-    \item Storage of RDF data over a distributed key-value store and the
-        problem that occurs in real implementation.
+    \item Proposes a universal ontology-based mapping scheme for heterogenous
+        XML metadata for large scale data.
+
+    \item Proposes a caching mechanism, called the \emph{Clusterspace}, for
+        storing mapped ontologies after DL-reasoning and enabling
+        graph-traversal based query mapping.
+
+    \item Proposes a cloud (Apache Cassandra) based distributed storage
+        mechanism for large scale data with the Clusterspace acting as an
+        efficient and accurate look-up directory.
+
 \end{itemize}
+
+We have implemented a prototype that captures the above ideas and evaluated it
+using the LUBM\cite{Guo05lubm} and DBpedia\cite{Auer07dbpedia} datasets.
 
 \section{Background}
 \label{sec:background}
 
-TODO
+The problem with XML is that XML schemas do not express semantics but only the
+document structure.  The World Wide Web Consortium\footnote{http://www.w3.org}
+has proposed a markup format called GRDDL\footnote{http://www.w3.org/TR/grddl/}
+to use XSLT to obtain RDF triples from XML. Similarly
+microformats\cite{Khare:06} allow embedding of data in a standardised format
+which can be used to extract semantic information from websites. These and some
+other approaches\cite{Lange09krextor}\cite{Akh08xsp} require the specification
+of some sort of mapping from XML to RDF or from XML Schema to Ontology and so
+requires significant effort for every XML format.
 
-\section{System}
+In ``XML to RDF Conversion: A Generic Approach''\cite{Deur08xml},  Deursen
+\emph{et. al.} provide a classification of XML to RDF conversion systems into
+those that attempt to extract information from XML and those that perform RDF
+generation. They also describe a tool that uses an Ontology and mapping
+document to generate RDF. But this too requires some document. Our approach
+generates RDF, but avoids using any mapping document, instead only using
+ontologies.
+
+Harth \emph{et. al.} propose a federated repository for querying structured
+data, called YARS2\cite{Harth07yars2}. YARS2 aggregates data from various
+sources on the web, and chronicles high performance solutions to the problem of
+storing massive RDF data on distributed systems. cumulusRDF\cite{ladwig:11} on
+the other hand, deals with storing RDF in a general purpose distributed
+database on commodity hardware and has been the inspiration for the data model.
+
+In recent years there has been impressive research on parallel
+reasoning\cite{Weaver09par}\cite{Urb09sca}, which supports T-Box and A-Box
+reasoning. Here we restrict ourselves to using standard reasoners, stick to the
+T-Box and cache the results in a graph. While this does not have the same
+comprehensive manner of a complete DL-reasoner, it is more suited to the use
+case of new data constantly entering the system, rather than the more offline
+approach required for A-Box reasoning even over multiple systems.
+
+\section{Methodology}
 The architecture of the implementation is outlined in Figure \ref{fig:architecture}.
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics[scale=0.5]{images/architecture}
     \caption{System architecture}
     \label{fig:architecture}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[scale=0.6]{images/cs}
-    \caption{Clusterspace}
-    \label{fig:cs}
 \end{figure}
 
 \emph{Publishers} feed data to the system via XML or RDF. The Clusterspace is
@@ -143,6 +181,13 @@ co-erced to the string representation, with only
 the Clusterspace. An example clusterspace for a small subset of the DBpedia
 ontology is shown in Figure \ref{fig:cs}.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{images/cs}
+    \caption{Clusterspace}
+    \label{fig:cs}
+\end{figure}
+
 The full algorithm for forming the clusterspace can be found in the appendix. %FIXME \ref{cs-algo}.
 The advantages and limitations of building up a Clusterspace are:
 
@@ -156,8 +201,8 @@ The advantages and limitations of building up a Clusterspace are:
         it in a graph like manner allows known, fast, read-only algorithms to
         be run over it. Copies of the graph can be maintained by all server
         nodes and all can be kept in sync using proven eventually consistent
-        systems\cite{Vogels08consistent}. This way a large number of clients
-        can be served without duplicate reasoning required each time.
+        systems. This way a large number of clients can be served without
+        duplicate reasoning required each time.
 \end{itemize}
 
 \subsubsection*{Limitations}
@@ -200,7 +245,7 @@ IDs. RDF Schema also specifies the semantic meaning of all RDF tags. In XML
 we've to compensate for the lack of identification by using clues from the
 surrounding text in the document.
 
-For example consider document~\ref{ex:xml-rec}\footnote{Based on the Music
+For example consider Figure~\ref{ex:xml-rec}\footnote{Based on the Music
 Ontology - http://purl.org/ontology/mo/}. Here it is quite evident to a human
 that record ``OK Computer'' contains the track ``Paranoid Android'' of duration
 384000ms. We use the known data properties of tags found in the data to figure
@@ -220,8 +265,8 @@ accepts plain XML, it has some preconditions for it to work:
         ontology.
     \item The top level tags should be class names.
     \item The conversion considers only one level of nesting in associating
-        data. For example, in document~\ref{ex:xml-bad} it won't infer that the
-        artist is called Radiohead.
+        data. For example, in Figure~\ref{ex:xml-bad} it will be unable to
+        infer that the artist is called Radiohead.
 \end{itemize}
 
 Since these datatype property based references can be present after their use
@@ -322,11 +367,19 @@ provide two additional Column-families in our system.
 
 The implementation was in Java and uses the following libraries:
 \begin{enumerate}
-    \item Neo4j\footnote{http://neo4j.org} for the Clusterspace.
-    \item Apache Cassandra\footnote{http://cassandra.apache.org} for the data storage.
+    \item Neo4j\footnote{http://neo4j.org} for the Clusterspace. Neo4j is
+        a graph database that supports replication and distribution.
+
+    \item Apache Cassandra\footnote{http://cassandra.apache.org} for the data
+        storage.
+
     \item OWL-API\cite{Hor:09} for handling ontologies.
-    \item Apache Jena\footnote{http://incubator.apache.org/jena/} for SPARQL and RDF parsing.
+
+    \item Apache Jena\footnote{http://incubator.apache.org/jena/} for SPARQL
+        and RDF parsing.
+
     \item JDOM\footnote{http://jdom.org} for XML parsing.
+
     \item Pellet\cite{Parsia04pellet:an} as the DL-reasoner.
 \end{enumerate}
 
@@ -342,7 +395,7 @@ Ubuntu variant with Cassandra pre-installed).  Cassandra was allocated 4GB of
 memory. One of the nodes ran our system.
 
 The dataset used for the data loading and queries was generated by the
-LUBM\cite{Guo05lubm} \texttt{ubt} generator tool. LUBM provides 14 queries to
+LUBM \texttt{ubt} generator tool. LUBM provides 14 queries to
 measure the performance of a system. Queries 11, 12 and 13 are not applicable
 to the system as it does not perform full RDFS entailment yet. Queries 2, 7 and
 9 would either timeout or the Jena SPARQL processor would run out of memory
@@ -352,7 +405,7 @@ We performed performance evaluations for our system in four parts.
 
 \subsection{Loading an ontology in the clusterspace}
 
-The DBpedia ontology\cite{Auer07dbpedia}
+The DBpedia ontology
 v3.6\footnote{http://wiki.dbpedia.org/Downloads36} has 272 classes, 629 object
 properties and 706 datatype properties. One of the key measures is the time
 taken to build the class heirarchy. Therefore we ran runs with modified DBpedia
@@ -376,8 +429,10 @@ accounting for an approximately logarithmic factor.
 
 \subsection{XML to RDF conversion time}
 
-To measure the time taken for XML to RDF conversion, a collection of sample RDF file
-generated using the LUBM data generator was used. A tool which read RDF and
+To measure the time taken for XML to RDF conversion, a collection of sample RDF
+file generated using the LUBM data generator was used. We did not continue with
+DBpedia since we could not generate custom datasets of various sizes as
+required. The LUBM benchmark includes tools to do so. A tool which read RDF and
 generated random XML structures was used to generate 10 versions of each RDF
 file. Each XML file was run through the converter 5 times. The test results are
 in Figure \ref{fig:eval:xml2rdf}. The \emph{x-axis} lists the number of class
@@ -391,16 +446,28 @@ the time taken linear with respect to the increase in inferred triples.
     \label{fig:eval:xml2rdf}
 \end{figure}
 
-\subsection{Query clusterspace time}
+\subsection{Query mapping time}
 
-For query processing, there are two measurements. One is the time spent traversing the clusterspace, and the other is time spent fetching data from Cassandra. The clusterspace is located only on one machine. Times measured are for the LUBM sample queries run on test data with 129533 class instances and 516116 property instances over the LUBM University Bench Ontology. Figure \ref{fig:eval:qcs} shows the time for Clusterspace traversal.
+For query processing, there are two measurements. One is the time spent
+traversing the clusterspace, and the other is time spent fetching data from
+Cassandra. The clusterspace is located only on one machine. Times measured are
+for the LUBM sample queries run on test data with 129533 class instances and
+516116 property instances over the LUBM University Bench Ontology. Figure
+\ref{fig:eval:qcs} shows the time for Clusterspace traversal.
 
-As is seen, clusterspace operations are quite fast. The main improvement over a reasoner is that for every query of every client, the reasoner may have to re-parse various ontologies and make inferences. More importantly, in a distributed system, each machine will have to run its own reasoner on its own set of ontologies. By having a shared Clusterspace, changes in data and inferences can be reflected across all machines without much of a performance hit. For simple queries in particular, the Clusterspace shows sub 10 millisecond times.
+As is seen, clusterspace operations are quite fast. The main improvement over
+a reasoner is that for every query of every client, the reasoner may have to
+re-parse various ontologies and make inferences. More importantly, in
+a distributed system, each machine will have to run its own reasoner on its own
+set of ontologies. By having a shared Clusterspace, changes in data and
+inferences can be reflected across all machines without much of a performance
+hit. For simple queries in particular, the Clusterspace shows sub 10
+millisecond times.
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.35]{../../graphs/full-query/qm}
-    \caption{Query retrieval Clusterspace traversal time}
+    \caption{Time taken for query mapping over the clusterspace}
     \label{fig:eval:qcs}
 \end{figure}
 
@@ -408,23 +475,15 @@ As is seen, clusterspace operations are quite fast. The main improvement over a 
 
 To measure total query retrieval time we ran a subset of the queries
 
-\begin{figure*}[t]
+\begin{figure}[t]
     \centering
-    \mbox{
-        \subfigure{
-            \includegraphics[scale=0.35]{../../graphs/full-query/qr}
-        }
-        \quad
-        \subfigure{
-            \includegraphics[scale=0.35]{../../graphs/cluster-query/qr.png}
-        }
-    }
-    \caption{Query retrieval total time - a) Single node b) Cluster }
+    \includegraphics[scale=0.35]{../../graphs/single-v-cluster.png}
+    \caption{Query retrieval total time}
     \label{fig:eval:qtotal}
-\end{figure*}
+\end{figure}
 
 Comparing total query retrieval time on a single node vs. a 4 node cluster
-(Figure \ref{fig:eval:qtotal}), there is not substantial difference between the
+(Figure \ref{fig:eval:qtotal}), there is a substantial difference between the
 runtime. This shows that although distributed storage offers fault-tolerance,
 data safety and storage of much greater volumes of data, a triple-store or any
 other database cannot simply swap out its general storage system for
@@ -436,11 +495,11 @@ I/O. As can be seen in the results of Query 14, which is a simple query for all
 is the number of known \texttt{GraduateStudent}s, network performance proved to
 be the undoing.  Requesting data from Cassandra, processing it, then requesting
 more data is an anti-pattern. A triplestore which instead sends the computation
-(the SPARQL query) to each Cassandra node, using something like
-MapReduce\cite{Dean04mapreduce:simplified} and only transfers the final results
-back to the server serving the client may give better performance than a single
-node dealing with similar or larger datasets. Progress has been made in the
-direction in recent times\cite{myung10spa}\cite{hus09hadoop}.
+(the SPARQL query) to each Cassandra node, using something similar to MapReduce
+and only transfers the final results back to the server serving the client may
+give better performance than a single node dealing with similar or larger
+datasets. Progress has been made in the direction in recent
+times\cite{myung10spa}\cite{hus09hadoop}.
 
 Another bottleneck is that our system has to retrieve all the triples for any
 resource in the query solution to offer more data about the instances. This
@@ -500,7 +559,7 @@ SELECT ?X WHERE {
 \end{figure}
 
 As can be seen in Figure \ref{fig:eval:accu}, even the naive implementation of
-the XML conversion works well. Query 1 achieves on an average 1.2 matches vs
+the XML conversion works well. We have plotted the recall, precision and f1 score. Recall is $\frac{\text{number of results returned}}{\text{total number of relevant results}}$. Precision is $\frac{\text{number of relevant results returned}}{\text{number of results returned}}$. Query 1 achieves on an average 1.2 matches vs
 the reference 4 matches. In addition Query 1 gives on an average a set of 0.8
 false results on an average (Students who are not actually taking the course
 but being a teaching assistant). This happens because it picks
@@ -567,8 +626,6 @@ the concept of RDF triples, while being flexible unlike relational databases.
 The extra information returned by our system makes it easy for mining tools to
 extract data, rather than create multiple queries. It should be noted that the
 implementation of our system was a proof of concept and is unoptimized.
-Especially in the case of Cassandra, significant gains can be achieved by
-buffering data better.
 
 Further research that can improve this system is:
 \begin{enumerate}
@@ -578,16 +635,19 @@ Further research that can improve this system is:
         ontologies based on the sub-tags and other improvements which could
         allow significant flexibility in the input XML data.
 
+    \item Supporting XML metadata where new semantic tags can be dynamically
+        constructed from existing ontologies.
+
     \item Using MapReduce over Cassandra for triple retrieval - Currently query
         resolution is done only on one machine, making it a bottleneck. Query
         resolution is a massively parallel task and applying
-        MapReduce\cite{Dean04mapreduce:simplified}\cite{hus09hadoop} would
+        MapReduce\cite{hus09hadoop} would
         yield substantial improvements.
 
     \item Real-time processing - Miners could register queries with the system
         and as data was submitted by publishers in real-time, the system could
         match the queries and notify the miners of new data satisfying the
-        queries\cite{Aba03aurora}.
+        queries.
 \end{enumerate}
 
 %\pagebreak
@@ -805,7 +865,7 @@ Further research that can improve this system is:
 % number - used to balance the columns on the last page
 % adjust value as needed - may need to be readjusted if
 % the document is modified later
-%\IEEEtriggeratref{8}
+%\IEEEtriggeratref{5}
 % The "triggered" command can be changed if desired:
 %\IEEEtriggercmd{\enlargethispage{-5in}}
 
