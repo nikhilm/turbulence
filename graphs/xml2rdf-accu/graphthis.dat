@@ -1,5 +1,5 @@
 # Query 1: <label> <ref> <avg> <min> <max>
-Q1 4 0 0 0
+Q1 4 1.2 0 2
 # Query 2:
 Q2 34 34 34 34
 # Query 3:

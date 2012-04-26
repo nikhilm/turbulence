@@ -460,9 +460,9 @@ general areas of the conversion.
         \begin{verbatim}
 SELECT ?X WHERE {
     ?X a ub:GraduateStudent .
-    ?X ub:takesCourse
-    <http://www.Department0.
-        University0.edu/GraduateCourse0>
+    ?Y a ub:Course .
+    ?X ub:takesCourse ?Y .
+    ?Y ub:name 'GraduateCourse0'.
 }
         \end{verbatim}
 
