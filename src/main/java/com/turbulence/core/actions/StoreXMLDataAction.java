@@ -66,6 +66,7 @@ import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.graph.Triple;
 
+import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -346,14 +347,12 @@ public class StoreXMLDataAction implements Action {
 
             Relationship opRel = opMatcher.match(child.getName());
             if (opRel != null) {
-                logger.warn(opRel.getProperty("IRI"));
                 for (Element subChild : child.getChildren()) {
                     Resolver val = toRDF(subChild);
                     if (val == null)
                         continue;
 
                     if (val instanceof ConcreteResolver) {
-                        logger.warn("Concerete");
                         model.add(model.createStatement(subject, model.createProperty((String)opRel.getProperty("IRI")), val.resolve()));
                     }
                     else
@@ -452,7 +451,7 @@ public class StoreXMLDataAction implements Action {
                 if (s != null)
                     model.add(s);
             }
-            model.write(System.err, "N-TRIPLES");
+            //model.write(System.err, "N-TRIPLES");
 
         } catch (JDOMException e) {
             e.printStackTrace();
