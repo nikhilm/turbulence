@@ -1,6 +1,6 @@
 set term png
 set output "qm.png"
-set title "Time for ClusterSpace operations - LUBM benchmarks"
+set title "Time for ClusterSpace mapping - LUBM benchmarks"
 set xlabel "Query"
 set ylabel "Time in ms (log)"
 set logscale y
