@@ -67,28 +67,25 @@
     mining, Knowledge management applications, Web mining, RDF, Semantic web.
 \end{IEEEkeywords}
 
-\section{Introduction}
-\IEEEPARstart{T}{raditionally} the semantic web has been restricted to academia
-and governments and has resisted adoption by the most popular websites. So
-called Web 2.0 websites, which are interactive and constantly producing new
-data have stuck to custom data exchange formats and APIs. Similarly embedded
-devices like scientific sensors, environment monitors and other devices stick
-to custom binary formats.  While the Linked Data initiative has led to
-availability of more structured data yet each of these datasets is on their own
-websites, and requires parties interested in consuming them to crawl individual
-databases. An alternative architecture would be a distributed ecosystem of
-semantic databases that can be used by multiple data producers, and whose data
-can be retrieved by multiple consumers. Dealing with such large volumes of data
-will require a distributed implementation of an RDF store. Soft real-time
-systems are more likely to be interested in instantaneous updates rather than
-in highly complex query processing, so that the database will not require
-comprehensive reasoning over the ontology space, but rather fast reasoning
-which can be re-used. The use of XML as a data format poses a problem of
-extracting semantic information since XML is loosely structured. The same tag
-may have different meanings in different systems and the definition of
-uniqueness may differ. Thus, to allow standardized queries, we present an
-attempt at extracting semantic information from XML. The contributions of this
-paper are:
+\section{Introduction} \IEEEPARstart{T}{raditionally} the semantic web has been
+restricted to academia and governments and has resisted adoption by the most
+popular websites. So called Web 2.0 websites, which are interactive and
+constantly producing new data have stuck to custom data exchange formats and
+APIs. Similarly embedded devices like scientific sensors, environment monitors
+and other devices stick to custom binary formats.  While the Linked Data
+initiative has led to availability of more structured data yet each of these
+datasets is on their own websites, and requires parties interested in consuming
+them to crawl individual databases. An alternative architecture would be
+a distributed ecosystem of semantic databases that can be used by multiple data
+producers, and whose data can be retrieved by multiple consumers. Dealing with
+such large volumes of data will require a distributed implementation of an RDF
+store. Soft real-time systems are more likely to be interested in instantaneous
+updates rather than in highly complex query processing, so that the database
+will not require comprehensive reasoning over the ontology space, but rather
+fast reasoning which can be re-used. The use of XML as a data format poses
+a problem of extracting semantic information since XML is loosely structured.
+Thus, to allow standardized queries, we present an attempt at extracting
+semantic information from XML. The contributions of this paper are:
 
 \begin{itemize}
     \item Proposes a universal ontology-based mapping scheme for heterogenous
@@ -98,14 +95,15 @@ paper are:
         storing mapped ontologies after DL-reasoning and enabling
         graph-traversal based query mapping.
 
-    \item Proposes a cloud (Apache Cassandra) based distributed storage
+    \item Proposes a Cloud (Apache Cassandra) based distributed storage
         mechanism for large scale data with the Clusterspace acting as an
         efficient and accurate look-up directory.
 
 \end{itemize}
 
 We have implemented a prototype that captures the above ideas and evaluated it
-using the LUBM\cite{Guo05lubm} and DBpedia\cite{Auer07dbpedia} datasets.
+for performance and accuracy using the LUBM\cite{Guo05lubm} and
+DBpedia\cite{Auer07dbpedia} datasets.
 
 \section{Background}
 \label{sec:background}
@@ -869,8 +867,11 @@ Further research that can improve this system is:
 % The "triggered" command can be changed if desired:
 %\IEEEtriggercmd{\enlargethispage{-5in}}
 
-% references section
+\section*{Acknowledgement}
+I would like to thank Prof. Dasgupta for spending considerable time and sharing his knowledge to make this project successful.
 
+% references section
+%
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,200801011}
 
