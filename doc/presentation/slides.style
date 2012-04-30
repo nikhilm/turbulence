@@ -20,7 +20,7 @@
     },
     "coverPage": {
         "frames": [
-            ["4%", "5%", "90%", "70%"]
+            ["4%", "5%", "90%", "80%"]
         ],
         "background": "images/mancloud.png"
     }
@@ -43,14 +43,13 @@
         "fontName": "Futura",
         "fontSize": 25,
         "textColor": "#000000",
-        "spaceAfter": 0
+        "spaceAfter": 40
     }],
     ["subtitle", {
         "fontSize": 12,
         "fontName": "Gill Sans Bold",
         "alignment": TA_CENTER,
-        "textColor": "#000000",
-        "spaceBefore": 20
+        "textColor": "#000000"
     }],
     ["large", {
         "fontSize": "200%",
