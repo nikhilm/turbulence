@@ -2,7 +2,8 @@ Semantic Mapping of XML Metadata for Cloud-based Large Scale Data Management
 ============================================================================
 .. class:: subtitle
 
-    Nikhil Marathe (200801011)
+    |                        Nikhil Marathe (200801011)
+    |                    Supervisor: Prof. Sourish Dasgupta
 
 .. raw:: pdf
 
