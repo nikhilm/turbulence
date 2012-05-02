@@ -29,14 +29,14 @@ In the mean time
 .. image:: images/net-interim.png
     :width: 12cm
 
-The problem
-------------
+Problem 1 - Extracting semantic information
+-------------------------------------------
 
 .. image:: images/xml2rdfcode.png
     :width: 12cm
 
-The problem
-------------
+Problem 2 - Data management
+---------------------------
 
 * Large scale & Big data
 * Should be:
@@ -49,10 +49,12 @@ Background
 ----------
 
 * XML to RDF - loosely structured, needs a template to convert
-* YARS2 - federated repository for semantic data with high performance
+* YARS2 [#yars2]_ - federated repository for semantic data with high performance
   distributed queries
 * Cassandra/Hadoop/MapReduce based approaches to implementing distributed
   semantic storage
+
+.. [#yars2] \A. Harth, J. Umbrich, A. Hogan, and S. Decker, "Yars2: A federated repository for querying graph structured data from the web"
 
 Solution?
 ---------
@@ -70,30 +72,29 @@ Solution?
 Clusterspace
 ------------
 
+.. raw:: pdf
+
+    Spacer 0, 30
+
 * Perform semantic reasoning and relationships
+
+.. raw:: pdf
+
+    Spacer 0, 20
+
 * Cache it once
+
+.. raw:: pdf
+
+    Spacer 0, 20
+
 * Make it available to all peers
 
 Clusterspace
 ------------
 
 .. image:: images/cs1.png
-    :width: 11cm
-
-Clusterspace
-------------
-
-.. image:: images/cs2.png
-
-Clusterspace
-------------
-
-.. image:: images/cs3.png
-
-Clusterspace
-------------
-
-.. image:: images/cs4.png
+    :width: 12cm
 
 XML to RDF conversion
 ---------------------
@@ -110,25 +111,25 @@ Datatype Properties
 -------------------
 
 .. image:: images/xml2rdf1.png
-    :width: 10cm
+    :width: 13cm
 
 Object Properties
 -----------------
 
 .. image:: images/xml2rdf2.png
-    :width: 9cm
+    :width: 13cm
 
 Inferred object references
 --------------------------
 
 .. image:: images/xml2rdf3.png
-    :width: 9cm
+    :width: 13cm
 
 Inferred properties
 -------------------
 
 .. image:: images/xml2rdf4.png
-    :width: 9cm
+    :width: 13cm
 
 Distributed RDF store
 ---------------------
@@ -150,59 +151,167 @@ nesting
 Storage layout - Concepts
 -------------------------
 
-===========   ==== ==== ==== ====
- Concept      C1   C2   C3   ...
-===========   ==== ==== ==== ====
-MusicArtist   A1   A5   A6   ...
-Record        R9   R6   R2   ...
-Track         T7   T3   T4   ...
+===========   ======   ====   ==== ====
+ Concept      C1        C2     C3   ...
+===========   ======   ====   ==== ====
+MusicArtist   **A2**   *A5*   *A6*  ...
+Record        **R1**   *R6*   *R2*  ...
 ...
-===========   ==== ==== ==== ====
+===========   ======   ====   ==== ====
 
-Storage layout - triples
-------------------------
+Storage layout - Data triples
+-----------------------------
 
-* One for S-P-O
+======= ========== =============== ==== ====
+Subject  Predicate           Object(s)
+------- ---------- -------------------------
+ ..        ..          Col          Col  Col
+======= ========== =============== ==== ====
+R1        type      Record
+R1        title     "OK Computer"
+R1        maker     A2
+A2        type      MusicArtist
+A2        name      "Radiohead"
+A2        bio       "..."
+======= ========== =============== ==== ====
 
-===== ========== =============== ==== ====
-  S       P           O
------ ---------- -------------------------
- ..      ..          Col          Col  Col
-===== ========== =============== ==== ====
-R2      type      Record
-R2      title     "OK Computer"
-R2      maker     A5
-A5      type      MusicArtist
-A5      name      "Radiohead"
-A5      bio       "..."
-A5      made      R2              R5   R7
-===== ========== =============== ==== ====
+====== ========= ===== === ===
+Object Predicate Subject(s)
+------ --------- -------------
+..     ..          Col Col Col
+====== ========= ===== === ===
+A2     maker      R1
+====== ========= ===== === ===
 
-Storage layout - triples
-------------------------
+Handling queries
+----------------
 
-* One for O-P-S
+.. raw:: pdf
 
-===== ====== ===
-  O     P     S
------ ------ ---
-..    ..     Col
-===== ====== ===
-A5    maker   R2
+    Spacer 0, 50
+
+.. code-block:: sparql
+
+    SELECT ?R WHERE {
+        ?R a Manifestation .
+        ?R maker ?A .
+        ?A name "Radiohead" .
+    }
+
+Query part 1
+------------
+
+.. raw:: pdf
+
+    Spacer 0, 20
+
+.. code-block:: sparql
+
+    ?R a Manifestation
+
+.. raw:: pdf
+
+    Spacer 0, 10
+
+Record and Track are also Manifestations
+
+.. raw:: pdf
+
+    Spacer 0, 10
+
+.. image:: images/csmanifest.png
+    :width: 8cm
+
+Get instances
+-------------
+
+===========   ======   ====   ==== ====
+ Concept      C1        C2     C3   ...
+===========   ======   ====   ==== ====
+MusicArtist     A2      A5     A6   ...
+**Record**      R1      R6     R2   ...
+===========   ======   ====   ==== ====
+
+.. code-block:: sparql
+
+    R1 a Manifestation
+    R6 a Manifestation
+    R2 a Manifestation
+
+Query part 2
+------------
+
+.. code-block:: sparql
+
+    ?R maker ?A .
+    (?R is now {R1, R6, R2})
+
+======= ========== =============== ==== ====
+Subject  Predicate           Object(s)
+------- ---------- -------------------------
+ ..        ..          Col          Col  Col
+======= ========== =============== ==== ====
+R1        maker     **A2**
+R1        title     "OK Computer"
+...       ...       ...
+R2        maker     **A5** (say)
+...       ...       ...
+R6        maker     **A9** (say)
+======= ========== =============== ==== ====
+
+Query part 3
+------------
+
+.. code-block:: sparql
+
+    ?A name "Radiohead"
+    (?A is now {A2, A5, A9})
+
+======= ========== =============== ==== ====
+Subject  Predicate           Object(s)
+------- ---------- -------------------------
+ ..        ..          Col          Col  Col
+======= ========== =============== ==== ====
+R1        type      Record
 ...
-===== ====== ===
+A5        name       The Beatles
+...
+**A2**  **name**   **"Radiohead"**
+...
+A9        name       Stars
+...
+======= ========== =============== ==== ====
+
+Finishing up the query
+----------------------
+
+.. raw:: pdf
+
+    Spacer 0, 60
+
+.. code-block:: sparql
+
+    ?A is { A2 }
+    ?R maker ?A => ?R maker A2
+    ?R is { R1 }
+
+So the answer is ?R = { R1 }
 
 Evaluation
 ----------
 
-* Most tests use the LUBM benchmark, one uses the DBpedia ontology
-* System was implemented in Java
-    * neo4j used as the graph database for the Clusterspace
-    * Apache Jena and OWLAPI for handling RDF and queries
-    * Pellet - DL-reasoner
-* Tested on Macbook Pro (2.3Ghz quad-core, 8GB RAM)
-* Distributed test on Amazon EC2, 4 large instances, Ubuntu, (dual core, 8GB
-  RAM)
+* Most tests use the LUBM benchmark suite [#lubm]_, one uses the DBpedia [#db]_ ontology
+* neo4j [#neo4j]_ used as the graph database for the Clusterspace
+* Apache Jena [#jena]_ and OWLAPI [#owlapi]_ for handling RDF and queries
+* Pellet [#pellet]_ - DL-reasoner
+* Tested on Macbook Pro and Amazon EC2 (4 machine cluster)
+
+.. [#lubm] \Y. Guo, Z.Pan, and J.Heflin, "LUBM: A benchmark for OWL knowledge base systems"
+.. [#db] http://dbpedia.org
+.. [#neo4j] http://neo4j.org
+.. [#jena] http://incubator.apache.org/jena/
+.. [#owlapi] http://owlapi.sourceforge.net
+.. [#pellet] http://clarkparsia.com/pellet
 
 Evaluation
 ----------
