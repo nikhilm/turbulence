@@ -31,7 +31,7 @@
         "fontName": "Georgia"
     }],
     ["heading1", {
-        "fontName": "Lobster",
+        "fontName": "Gill Sans",
         "textColor": "#008800",
         "fontSize": 20,
         "spaceAfter": 20
@@ -60,6 +60,15 @@
     }],
     ["endnote", {
         "fontSize": 8
+    }],
+    ["definition-list-term", {
+        "fontSize": 11
+    }],
+    ["definition", {
+        "fontSize": 11
+    }],
+    ["heading2", {
+        "fontSize": 14
     }]
 ]
 }
