@@ -2,8 +2,7 @@ set term png
 set output "single-v-cluster.png"
 set title "Time for Triple retreival - LUBM benchmarks"
 set xlabel "Query"
-set ylabel "Time in ms (log)"
-#set logscale y
+set ylabel "Time in ms"
 set tics out
 set style fill solid 1.0 border -1
 set boxwidth 0.9

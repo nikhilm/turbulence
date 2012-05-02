@@ -1,8 +1,8 @@
 set term png
 set output "qr.png"
-set title "Time for Triple retreival in the cluster"
+set title "Time for Triple retrieval in the cluster"
 set xlabel "Query"
-set ylabel "Time in ms (log)"
+set ylabel "Time in ms (log scale)"
 set logscale y
 set tics out
 set autoscale y
