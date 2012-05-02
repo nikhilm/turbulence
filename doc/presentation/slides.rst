@@ -35,6 +35,12 @@ Problem 1 - Extracting semantic information
 .. image:: images/xml2rdfcode.png
     :width: 12cm
 
+Problem 1 - Extracting semantic information
+-------------------------------------------
+
+.. image:: images/xml2rdfcode1.png
+    :width: 12cm
+
 Problem 2 - Data management
 ---------------------------
 
