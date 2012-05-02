@@ -68,13 +68,6 @@ Solution?
 .. image:: images/architecture.png
     :width: 12cm
 
-Solution?
----------
-
-* Convert XML to RDF based on certain ontology based constraints
-* Use a Clusterspace for caching reasoning information
-* Store data in the Cloud using Apache Cassandra
-
 Clusterspace
 ------------
 
